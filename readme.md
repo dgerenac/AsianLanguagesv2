@@ -1,4 +1,4 @@
-👋 Welcome to the Language Learning Project!
+你好! 안녕! やあ! Welcome to the Asian Languages Project!
 This is an educational and interactive web application designed to help you practice writing characters from different languages. It offers a dynamic way to learn stroke order and sentence formatting, all within a modern and responsive interface. Specifically, for Hanzi, Kanji, and Hangul, the application will display the stroke order for each character within dedicated input boxes, guiding you through the correct writing sequence.
 
 ✨ Main Features
