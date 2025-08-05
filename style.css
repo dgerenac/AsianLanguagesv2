@@ -23,34 +23,47 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 2px;
-  color: #6b7280; /* gris suave */
+  color: #6b7280; /* suave gris */
 }
 
-/* Header: título a la izquierda, nav a la derecha en una sola línea */
-header .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* título a la izquierda, nav a la derecha */
-  gap: 1rem;
-  flex-wrap: nowrap; /* que no se quiebren en varias líneas */
+/* Header: title on the left, nav on the right in a single line */
+header {
+    background-color: #1f2937; /* Dark background for the header */
+    color: white; /* White text for header elements */
+    padding: 1rem 0; /* Vertical padding */
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Vertically align items */
+    justify-content: space-between; /* Space out title and nav */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-nav {
-  display: flex;
-  align-items: center;
+header .site-title-wrapper {
+    flex-grow: 1; /* Allows the title wrapper to take available space */
+    text-align: center; /* Center the title by default */
+}
+
+header .site-title {
+    font-size: 1.8rem; /* Base font size for the main title */
+    margin: 0; /* Remove default margin */
+    padding-left: 1rem; /* Add some padding on the left */
+}
+
+header nav {
+    flex-basis: auto; /* Allow nav to take content width */
+    padding-right: 1rem; /* Add some padding on the right */
 }
 
 .nav {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  flex-wrap: nowrap; /* todos en una línea */
-  overflow-x: auto; /* en pantallas muy pequeñas permite scroll si hace falta */
+    display: flex;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    flex-wrap: nowrap; /* Keep all nav items in one line */
+    overflow-x: auto; /* Allow horizontal scroll on very small screens */
 }
 
-/* Links como botones suaves */
+/* Smooth button-like links */
 .nav .nav-link {
   position: relative;
   padding: 0.55rem 1rem;
@@ -63,7 +76,7 @@ nav {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  white-space: nowrap; /* que no se quiebren los textos */
+  white-space: nowrap; /* Prevent text from breaking */
 }
 
 .nav .nav-link:hover,
@@ -78,64 +91,62 @@ nav {
   background: rgba(255, 255, 255, 0.25);
 }
 
- 
 main {
-    padding: 20px;
-    max-width: 1450px;
-    margin: 20px auto;
-    background-color: rgb(255, 255, 255);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgb(138, 156, 255);
+  padding: 20px;
+  max-width: 1450px;
+  margin: 20px auto;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(138, 156, 255);
 }
 
-/* Estilos para las secciones */
+/* Section styles */
 section {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #ffffff; /* Sutil línea divisoria */
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ffffff; /* Subtle dividing line */
 }
 
 section:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
-/* Estilos para títulos de sección (h2, h3) */
-h2, h3 {
-    color: #2980b9;
-    text-align: left;
-    margin-bottom: 15px;
-    /* Reducido para ser más pequeño en desktop */
-    font-size: 1rem;
+/* Styles for section titles (h2, h3, .display-4) - Unified size */
+h2, h3, .display-4 {
+  color: #2980b9;
+  text-align: center; /* Centered for all section titles */
+  margin-bottom: 15px;
+  font-size: 2rem; /* Consistent size for desktop */
 }
 
-/* Estilo para el texto de explicación */
+/* Style for explanation text */
 .explanation-text {
-    font-size: 1rem; /* Ajustado para ser un poco más pequeño */
-    color: #555;
-    text-align: justify;
-    margin-top: 20px;
+  font-size: 1rem; /* Slightly smaller */
+  color: #555;
+  text-align: justify;
+  margin-top: 20px;
 }
 
-/* Estilos para listas ordenadas y desordenadas */
+/* Styles for ordered and unordered lists */
 ol, ul {
-    list-style-position: inside;
-    padding-left: 20px;
-    margin-bottom: 20px;
+  list-style-position: inside;
+  padding-left: 20px;
+  margin-bottom: 20px;
 }
 
 ol li {
-    font-weight: bold;
-    margin-bottom: 8px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 ul li {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
-/* Estilos para enlaces */
+/* Styles for links */
 a {
-    color: #2980b9;
-    text-decoration: underline;
+  color: #2980b9;
+  text-decoration: underline;
 }
 
 .btn-custom {
@@ -154,16 +165,16 @@ a {
   line-height: 1.1;
   font-size: 0.95rem;
   outline: none;
-  text-decoration: none; /* útil si se usa en <a> */
+  text-decoration: none; /* useful if used on <a> */
 }
 
-/* Variante principal (azul degradado) */
+/* Primary variant (blue gradient) */
 .btn-custom.primary {
   background: linear-gradient(135deg, #3751ff, #5c88ff);
   color: #fff;
 }
 
-/* Variante secundaria (blanco con borde sutil) */
+/* Secondary variant (white with subtle border) */
 .btn-custom.secondary {
   background: #fff;
   color: var(--text);
@@ -182,14 +193,14 @@ a {
   box-shadow: 0 6px 15px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Enfoque accesible */
+/* Accessible focus */
 .btn-custom:focus-visible {
   outline: 3px solid rgba(59, 130, 246, 0.6);
   outline-offset: 2px;
 }
 
 /* ------------------ */
-/* Navegación como botones suaves */
+/* Navigation as soft buttons */
 /* ------------------ */
 .nav .nav-link {
   position: relative;
@@ -214,165 +225,167 @@ a {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* Estilos para imágenes */
+/* Styles for images */
 img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 15px auto;
-    border-radius: 4px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 15px auto;
+  border-radius: 4px;
 }
 
-/* Estilos para iconos sociales en el footer */
+/* Styles for social icons in the footer */
 .footer-social-icon {
-    width: 30px;
-    height: auto;
-    margin: 5px 10px;
-    display: inline-block;
+  width: 30px;
+  height: auto;
+  margin: 5px 10px;
+  display: inline-block;
 }
 
-/* Estilos para el pie de página */
+/* Styles for the footer */
 footer {
-    background-color: #151B54;
-    color: white;
-    text-align: center;
-    padding: 1rem 0;
-    margin-top: 30px;
-    font-size: 0.9rem;
-    clear: both;
+  background-color: #151B54;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 30px;
+  font-size: 0.9rem;
+  clear: both;
 }
 
-/* Clases de utilidad para placeholders */
+/* Utility classes for placeholders */
 .videoph, .chart-placeholder {
-    background-color: #dddddd;
-    border: 1px dashed #e7f9ff;
-    padding: 20px;
-    text-align: center;
-    color: #666;
-    margin-top: 20px;
-    border-radius: 5px;
+  background-color: #dddddd;
+  border: 1px dashed #e7f9ff;
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  margin-top: 20px;
+  border-radius: 5px;
 }
 
-/* Contenedor de video para mantener la relación de aspecto 16:9 */
+/* Video container to maintain 16:9 aspect ratio */
 .video-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 56.25%; /* 16:9 */
-    overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  overflow: hidden;
 }
 
 .video-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
-/* Estilos de la cuadrícula de Tian Zi Ge */
+/* Tian Zi Ge grid styles */
 .tian-zi-ge-section {
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .tian-zi-ge-grid {
-    max-width: 900px;
-    margin: 0 auto;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .tian-zi-ge-square {
-    width: 100px;
-    height: 100px;
-    border: 1px solid #ccc;
-    margin: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3em;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
 }
 
-/* Estilos de los idiomas en los títulos */
+/* Language styles in titles */
 .idioma-chino {
-    color: #d9534f;
+  color: #d9534f;
 }
 .idioma-coreano {
-    color: #0275d8;
+  color: #0275d8;
 }
 
-/* Estilos para botones de Bootstrap (ejemplo de personalización) */
+/* Bootstrap button styles (customization example) */
 .btn-primary {
-    background-color: #5cb85c;
-    border-color: #5cb85c;
+  background-color: #5cb85c;
+  border-color: #5cb85c;
 }
 
-/* Estilos para cajas de tarjetas (ej. en About Us) */
+/* Card box styles (e.g., in About Us) */
 .card-box {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 30px;
-    transition: transform 0.2s ease;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+  transition: transform 0.2s ease;
 }
 
 .card-box:hover {
-    transform: translateY(-4px);
+  transform: translateY(-4px);
 }
 
 .card-title {
-    font-size: 1.5rem;
-    color: #2980b9;
-    margin-bottom: 10px;
-    font-weight: bold;
+  font-size: 1.5rem;
+  color: #2980b9;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .card-text {
-    color: #444;
-    text-align: justify;
+  color: #444;
+  text-align: justify;
 }
 
-/* Media Queries para responsividad */
-/* Ajustes para pantallas grandes (desktop) */
-.display-4 {
-    /* Reducido significativamente para desktop, aproximadamente la mitad de 3.5rem (Bootstrap default) */
-    font-size: 1.5rem; /* 24px si base es 16px */
+/* Media Queries for responsiveness */
+/* Adjustments for large screens (desktop) */
+@media (min-width: 993px) { /* Apply these styles for screens larger than tablets */
+    h2, h3, .display-4 {
+        font-size: 2rem; /* Consistent size for desktop */
+    }
 }
 
-@media (max-width: 992px) { /* Para pantallas de tabletas y laptops pequeñas */
-    header h1 {
-        font-size: 1.1rem;
+@media (max-width: 992px) { /* For tablet and small laptop screens */
+    header .site-title {
+        font-size: 1.6rem;
     }
-    h2, h3 {
-        font-size: 0.9rem;
+    h2, h3, .display-4 {
+        font-size: 1.8rem;
     }
-    .display-4 {
+}
+
+@media (max-width: 768px) { /* For vertical tablet and large mobile screens */
+    header .site-title {
+        font-size: 1.4rem;
+    }
+    h2, h3, .display-4 {
+        font-size: 1.5rem;
+    }
+    header .site-title-wrapper {
+        text-align: left; /* Align title to left on smaller screens */
+        padding-left: 1rem;
+    }
+    header nav {
+        width: 100%; /* Make nav take full width */
+        justify-content: center; /* Center nav items */
+        padding-top: 0.5rem;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 576px) { /* For small mobile screens */
+    header .site-title {
         font-size: 1.2rem;
     }
-}
-
-@media (max-width: 768px) { /* Para pantallas de tabletas en vertical y móviles grandes */
-    header h1 {
-        font-size: 1rem;
-    }
-    h2, h3 {
-        font-size: 0.8rem;
-    }
-    .display-4 {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 576px) { /* Para pantallas de móviles pequeños */
-    header h1 {
-        font-size: 0.9rem;
-    }
-    h2, h3 {
-        font-size: 0.7rem;
-    }
-    .display-4 {
-        font-size: 0.8rem;
+    h2, h3, .display-4 {
+        font-size: 1.2rem;
     }
     .lead {
         font-size: 0.8rem;
@@ -386,19 +399,19 @@ footer {
     }
 }
 
-/* Centro total del contenido dentro de su contenedor */
+/* Full center content within its container */
 .full-center {
   display: flex;
   flex-direction: column;
-  align-items: center;      /* centra horizontal */
-  justify-content: center;  /* centra vertical */
+  align-items: center;      /* centers horizontally */
+  justify-content: center;  /* centers vertically */
   gap: 1.5rem;
-  min-height: 250px; /* ajusta si lo querés más alto; usa 100vh si es toda la pantalla */
+  min-height: 250px; /* adjust if you want it taller; use 100vh if it's the whole screen */
   padding: 1rem;
   text-align: center;
 }
 
-/* Ya tenías esto, asegura que esté */
+/* Ensure this is present */
 .translation-block {
   display: flex;
   flex-direction: column;
@@ -414,10 +427,10 @@ footer {
 
 .romanization {
   display: block;
-  margin: 0 auto;       /* la centra horizontalmente */
-  text-align: center;   /* centra el texto dentro del párrafo */
+  margin: 0 auto;        /* centers horizontally */
+  text-align: center;    /* centers text within the paragraph */
   font-size: 0.95rem;
   color: #555;
   font-style: italic;
-  max-width: 800px;     /* opcional: para que no se estire demasiado en pantallas grandes */
+  max-width: 800px;      /* optional: so it doesn't stretch too much on large screens */
 }
