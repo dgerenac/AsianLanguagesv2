@@ -4,16 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearAllButton = document.getElementById('clear-all');
     const downloadPdfButton = document.getElementById('download-pdf');
     const placeholderMessage = document.getElementById('placeholder-message');
+    const hangulRomanizationDisplay = document.getElementById('hangul-romanization-display'); // Nuevo elemento
 
     const canvases = []; // Almacenará las instancias de canvas
 
     /**
      * Genera los cuadros interactivos para cada carácter de Hangul.
-     * @param {string} characters Los caracteres a generar.
+     * @param {string} text Los caracteres a generar.
      */
     const generateHangulSquares = (text) => {
         hangulWritingGrid.innerHTML = ''; // Limpia la cuadrícula actual
         canvases.length = 0; // Limpia el array de canvases
+        hangulRomanizationDisplay.textContent = 'Romanization: '; // Limpiar la romanización
 
         if (text.trim().length === 0) {
             placeholderMessage.style.display = 'block';
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Dividir el texto por espacios para obtener frases
         const phrases = text.trim().split(' ');
+        let currentRomanizationText = 'Romanization: ';
 
         phrases.forEach((phrase, phraseIndex) => {
             if (phrase.length > 0) {
@@ -60,19 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     phraseContainer.appendChild(squareContainer);
                     canvases.push(canvas);
 
-                    // Lógica para dibujar en el canvas
-                    let isDrawing = false;
-                    const ctx = canvas.getContext('2d');
-                    ctx.strokeStyle = '#333';
-                    ctx.lineWidth = 3;
-                    ctx.lineCap = 'round';
-
                     // Lógica para dibujar el carácter al hacer clic
                     squareContainer.addEventListener('click', () => {
-                        // Limpiamos el canvas antes de dibujar el nuevo carácter
+                        const ctx = canvas.getContext('2d');
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        
-                        // Generamos el patrón de Hangul y lo dibujamos en el canvas
                         ctx.fillStyle = '#333';
                         ctx.font = '72px Arial';
                         ctx.textAlign = 'center';
@@ -81,6 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     // Lógica para dibujar con el mouse/táctil
+                    let isDrawing = false;
+                    const ctx = canvas.getContext('2d');
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 3;
+                    ctx.lineCap = 'round';
+
                     const startDrawing = (e) => {
                         isDrawing = true;
                         charDisplay.style.color = 'transparent'; // Oculta el carácter gris al empezar a dibujar
@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+        hangulRomanizationDisplay.textContent = currentRomanizationText.trim(); // Mostrar la romanización
     };
 
     // Escucha cambios en el input del usuario
@@ -159,9 +160,53 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Lógica para el botón de descarga de PDF (Placeholder por ahora)
-    downloadPdfButton.addEventListener('click', () => {
-        alert('La funcionalidad para descargar el PDF está en desarrollo. ¡Pronto estará disponible!');
+    // Lógica para el botón de descarga de PDF (se mantiene igual)
+    downloadPdfButton.addEventListener('click', async () => {
+        if (canvases.length === 0) {
+            alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
+            return;
+        }
+
+        downloadPdfButton.textContent = 'Generating PDF...';
+        downloadPdfButton.disabled = true;
+
+        try {
+            const gridContainer = document.getElementById('hangul-writing-grid');
+            const canvas = await html2canvas(gridContainer, { scale: 2 });
+            const imgData = canvas.toDataURL('image/png');
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: 'p',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 10;
+
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save('hangul-worksheet.pdf');
+            alert('PDF generado y descargado correctamente!');
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Hubo un error al generar el PDF. Por favor, revisa la consola para más detalles.');
+        } finally {
+            downloadPdfButton.textContent = 'Download PDF';
+            downloadPdfButton.disabled = false;
+        }
     });
 
     // Generar la palabra "annyeong" por defecto al cargar la página
