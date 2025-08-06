@@ -1,391 +1,278 @@
-:root {
-  --bg: #f5f7fa;
-  --card-bg: #ffffff;
-  --text: #1f2937;
-  --radius: 1rem;
-  --shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-  --radius-sm: 0.75rem;
-  --ff-base: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  --transition: 0.3s cubic-bezier(.4,.2,.2,1);
-}
+/* Estilos Globales para todo el cuerpo de la página */
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--ff-base);
-  line-height: 1.55;
-  margin: 0;
-  font-size: 16px;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e8ffe99c;
+    color: #333; /* Color de texto principal */
+    line-height: 1.6; /* Espaciado de línea para mejor legibilidad */
 }
 
-.tagline {
-  font-size: 0.75rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 2px;
-  color: #6b7280; /* suave gris */
-}
-
-/* Header: title on the left, nav on the right in a single line */
+/* Estilos del encabezado principal */
 header {
-    background-color: #1f2937; /* Dark background for the header */
-    color: white; /* White text for header elements */
-    padding: 1rem 0; /* Vertical padding */
-    display: flex; /* Use flexbox for layout */
-    align-items: center; /* Vertically align items */
-    justify-content: space-between; /* Space out title and nav */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    background-color: #151B54;
+    color: white;
+    padding: 1rem 20px;
+    text-align: left;
 }
 
-header .site-title-wrapper {
-    flex-grow: 1; /* Allows the title wrapper to take available space */
-    text-align: center; /* Center the title by default */
+header h1 {
+    margin: 0;
+    /* Tamaño del título principal ajustado para ser consistente en todas las páginas */
+    font-size: 1.25rem; /* Tamaño deseado por el usuario */
 }
 
-header .site-title {
-    font-size: 1.8rem; /* Base font size for the main title */
-    margin: 0; /* Remove default margin */
-    padding-left: 1rem; /* Add some padding on the left */
+/* Estilos para los nombres de los idiomas en chino, coreano y japonés */
+.hanzi, .hangul, .japanese {
+    /* Tamaño de la fuente ajustado para que sea más sutil */
+    font-size: 1em;
+    text-align: left;
 }
 
-header nav {
-    flex-basis: auto; /* Allow nav to take content width */
-    padding-right: 1rem; /* Add some padding on the right */
-}
-
-.nav {
-    display: flex;
-    gap: 0.75rem;
+/* Estilos de la barra de navegación */
+nav ul {
+    list-style: none;
     padding: 0;
     margin: 0;
-    list-style: none;
-    flex-wrap: nowrap; /* Keep all nav items in one line */
-    overflow-x: auto; /* Allow horizontal scroll on very small screens */
+    float: right;
+    margin-top: -30px;
 }
 
-/* Smooth button-like links */
-.nav .nav-link {
-  position: relative;
-  padding: 0.55rem 1rem;
-  border-radius: 0.65rem;
-  background: rgba(255, 255, 255, 0.08);
-  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
-  box-shadow: 0 6px 18px -8px rgba(0,0,0,0.1);
-  font-weight: 600;
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  white-space: nowrap; /* Prevent text from breaking */
+nav ul li {
+    display: inline-block;
+    margin-left: 15px;
 }
 
-.nav .nav-link:hover,
-.nav .nav-link:focus-visible {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-  box-shadow: 0 14px 34px -10px rgba(0,0,0,0.2);
-  color: #ffffb3;
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-.nav .nav-link.active {
-  background: rgba(255, 255, 255, 0.25);
+nav ul li a:hover {
+    color: #FFFF33; /* Color de resaltado al pasar el cursor */
 }
 
+/* Estilos del contenido principal */
 main {
-  padding: 20px;
-  max-width: 1450px;
-  margin: 20px auto;
-  background-color: rgb(255, 255, 255);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgb(138, 156, 255);
+    padding: 20px;
+    max-width: 1450px;
+    margin: 20px auto;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(138, 156, 255);
 }
 
-/* Section styles */
+/* Estilos para las secciones */
 section {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #ffffff; /* Subtle dividing line */
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ffffff; /* Sutil línea divisoria */
 }
 
 section:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
-/* Styles for section titles (h2, h3, .display-4) - Unified size */
-h2, h3, .display-4 {
-  color: #2980b9;
-  text-align: center; /* Centered for all section titles */
-  margin-bottom: 15px;
-  font-size: 2rem; /* Consistent size for desktop */
+/* Estilos para títulos de sección (h2, h3) */
+h2, h3 {
+    color: #2980b9;
+    text-align: left;
+    margin-bottom: 15px;
+    /* Tamaño de la fuente para títulos de sección ajustado para ser más pequeño */
+    font-size: 1.5rem; /* Ajuste para desktop */
 }
 
-/* Style for explanation text */
+/* Estilo para el texto de explicación */
 .explanation-text {
-  font-size: 1rem; /* Slightly smaller */
-  color: #555;
-  text-align: justify;
-  margin-top: 20px;
+    font-size: 1.1rem;
+    color: #555;
+    text-align: justify;
+    margin-top: 20px;
 }
 
-/* Styles for ordered and unordered lists */
+/* Estilos para listas ordenadas y desordenadas */
 ol, ul {
-  list-style-position: inside;
-  padding-left: 20px;
-  margin-bottom: 20px;
+    list-style-position: inside;
+    padding-left: 20px;
+    margin-bottom: 20px;
 }
 
 ol li {
-  font-weight: bold;
-  margin-bottom: 8px;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 ul li {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
-/* Styles for links */
+/* Estilos para enlaces */
 a {
-  color: #2980b9;
-  text-decoration: underline;
+    color: #2980b9;
+    text-decoration: underline;
 }
 
-.btn-custom {
-  font-family: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, BlinkMacSystemFont;
-  font-weight: 600;
-  padding: 0.55rem 1.25rem;
-  border: none;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-  box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.08);
-  line-height: 1.1;
-  font-size: 0.95rem;
-  outline: none;
-  text-decoration: none; /* useful if used on <a> */
+a:hover {
+    color: #e74c3c; /* Color de resaltado para enlaces */
 }
 
-/* Primary variant (blue gradient) */
-.btn-custom.primary {
-  background: linear-gradient(135deg, #3751ff, #5c88ff);
-  color: #fff;
-}
-
-/* Secondary variant (white with subtle border) */
-.btn-custom.secondary {
-  background: #fff;
-  color: var(--text);
-  border: 1px solid rgba(31, 41, 55, 0.15);
-}
-
-/* Hover / focus */
-.btn-custom:hover,
-.btn-custom:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 38px -10px rgba(0, 0, 0, 0.18);
-}
-
-.btn-custom:active {
-  transform: translateY(0);
-  box-shadow: 0 6px 15px -5px rgba(0, 0, 0, 0.1);
-}
-
-/* Accessible focus */
-.btn-custom:focus-visible {
-  outline: 3px solid rgba(59, 130, 246, 0.6);
-  outline-offset: 2px;
-}
-
-/* ------------------ */
-/* Navigation as soft buttons */
-/* ------------------ */
-.nav .nav-link {
-  position: relative;
-  padding: 0.55rem 1rem;
-  border-radius: 0.65rem;
-  background: rgba(255, 255, 255, 0.08);
-  margin-left: 6px;
-  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
-  box-shadow: 0 6px 18px -8px rgba(0,0,0,0.1);
-  font-weight: 600;
-}
-
-.nav .nav-link:hover,
-.nav .nav-link:focus-visible {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-  box-shadow: 0 14px 34px -10px rgba(0,0,0,0.2);
-  color: #ffffb3;
-}
-
-.nav .nav-link.active {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* Styles for images */
+/* Estilos para imágenes */
 img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 15px auto;
-  border-radius: 4px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px auto;
+    border-radius: 4px;
 }
 
-/* Styles for social icons in the footer */
+/* Estilos para iconos sociales en el footer */
 .footer-social-icon {
-  width: 30px;
-  height: auto;
-  margin: 5px 10px;
-  display: inline-block;
+    width: 30px;
+    height: auto;
+    margin: 5px 10px;
+    display: inline-block;
 }
 
-/* Styles for the footer */
+/* Estilos para el pie de página */
 footer {
-  background-color: #151B54;
-  color: white;
-  text-align: center;
-  padding: 1rem 0;
-  margin-top: 30px;
-  font-size: 0.9rem;
-  clear: both;
+    background-color: #151B54;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    clear: both;
 }
 
-/* Utility classes for placeholders */
+/* Clases de utilidad para placeholders */
 .videoph, .chart-placeholder {
-  background-color: #dddddd;
-  border: 1px dashed #e7f9ff;
-  padding: 20px;
-  text-align: center;
-  color: #666;
-  margin-top: 20px;
-  border-radius: 5px;
+    background-color: #dddddd;
+    border: 1px dashed #e7f9ff;
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    margin-top: 20px;
+    border-radius: 5px;
 }
 
-/* Video container to maintain 16:9 aspect ratio */
+/* Contenedor de video para mantener la relación de aspecto 16:9 */
 .video-wrapper {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 */
-  overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    overflow: hidden;
 }
 
 .video-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
-/* Tian Zi Ge grid styles */
+/* Estilos de la cuadrícula de Tian Zi Ge */
 .tian-zi-ge-section {
-  text-align: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .tian-zi-ge-grid {
-  max-width: 900px;
-  margin: 0 auto;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .tian-zi-ge-square {
-  width: 100px;
-  height: 100px;
-  border: 1px solid #ccc;
-  margin: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 3em;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
 }
 
-/* Language styles in titles */
+/* Estilos de los idiomas en los títulos */
 .idioma-chino {
-  color: #d9534f;
+    color: #d9534f;
 }
 .idioma-coreano {
-  color: #0275d8;
+    color: #0275d8;
+}
+.idioma-japones { /* Nuevo estilo para el idioma Japonés */
+    color: #ff9900; /* Color de ejemplo, puedes ajustarlo */
 }
 
-/* Bootstrap button styles (customization example) */
+/* Estilos para botones de Bootstrap (ejemplo de personalización) */
 .btn-primary {
-  background-color: #5cb85c;
-  border-color: #5cb85c;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
 }
 
-/* Card box styles (e.g., in About Us) */
+/* Estilos para cajas de tarjetas (ej. en About Us) */
 .card-box {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 30px;
-  transition: transform 0.2s ease;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+    transition: transform 0.2s ease;
 }
 
 .card-box:hover {
-  transform: translateY(-4px);
+    transform: translateY(-4px);
 }
 
 .card-title {
-  font-size: 1.5rem;
-  color: #2980b9;
-  margin-bottom: 10px;
-  font-weight: bold;
+    font-size: 1.5rem;
+    color: #2980b9;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .card-text {
-  color: #444;
-  text-align: justify;
+    color: #444;
+    text-align: justify;
 }
 
-/* Media Queries for responsiveness */
-/* Adjustments for large screens (desktop) */
-@media (min-width: 993px) { /* Apply these styles for screens larger than tablets */
-    h2, h3, .display-4 {
-        font-size: 2rem; /* Consistent size for desktop */
+/* Media Queries para responsividad */
+@media (max-width: 992px) { /* Para pantallas de tabletas y laptops pequeñas */
+    header h1 {
+        font-size: 1.1rem;
     }
-}
-
-@media (max-width: 992px) { /* For tablet and small laptop screens */
-    header .site-title {
-        font-size: 1.6rem;
+    h2, h3 {
+        font-size: 1.2rem; /* Ajuste para pantallas medianas */
     }
-    h2, h3, .display-4 {
-        font-size: 1.8rem;
+    .display-4 {
+        font-size: 1.8rem; /* Ajuste para pantallas medianas */
     }
 }
 
-@media (max-width: 768px) { /* For vertical tablet and large mobile screens */
-    header .site-title {
-        font-size: 1.4rem;
+@media (max-width: 768px) { /* Para pantallas de tabletas en vertical y móviles grandes */
+    header h1 {
+        font-size: 1rem;
     }
-    h2, h3, .display-4 {
-        font-size: 1.5rem;
+    h2, h3 {
+        font-size: 1rem; /* Ajuste para pantallas más pequeñas */
     }
-    header .site-title-wrapper {
-        text-align: left; /* Align title to left on smaller screens */
-        padding-left: 1rem;
-    }
-    header nav {
-        width: 100%; /* Make nav take full width */
-        justify-content: center; /* Center nav items */
-        padding-top: 0.5rem;
-        padding-right: 0;
+    .display-4 {
+        font-size: 1.5rem; /* Ajuste para pantallas más pequeñas */
     }
 }
 
-@media (max-width: 576px) { /* For small mobile screens */
-    header .site-title {
-        font-size: 1.2rem;
+@media (max-width: 576px) { /* Para pantallas de móviles pequeños */
+    header h1 {
+        font-size: 0.9rem;
     }
-    h2, h3, .display-4 {
-        font-size: 1.2rem;
+    h2, h3 {
+        font-size: 0.9rem;
+    }
+    .display-4 {
+        font-size: 1.2rem; /* Ajuste para móviles */
     }
     .lead {
         font-size: 0.8rem;
@@ -397,40 +284,4 @@ footer {
         float: none;
         margin-top: 10px;
     }
-}
-
-/* Full center content within its container */
-.full-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;      /* centers horizontally */
-  justify-content: center;  /* centers vertically */
-  gap: 1.5rem;
-  min-height: 250px; /* adjust if you want it taller; use 100vh if it's the whole screen */
-  padding: 1rem;
-  text-align: center;
-}
-
-/* Ensure this is present */
-.translation-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.translation-text {
-  margin: 0;
-  font-size: 1rem;
-  color: #111;
-}
-
-.romanization {
-  display: block;
-  margin: 0 auto;        /* centers horizontally */
-  text-align: center;    /* centers text within the paragraph */
-  font-size: 0.95rem;
-  color: #555;
-  font-style: italic;
-  max-width: 800px;      /* optional: so it doesn't stretch too much on large screens */
 }
