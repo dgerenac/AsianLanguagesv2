@@ -3,127 +3,86 @@ document.addEventListener('DOMContentLoaded', () => {
     const tianZiGeGrid = document.getElementById('tian-zi-ge-grid');
     const animateAllButton = document.getElementById('animate-all');
     const downloadPdfButton = document.getElementById('download-pdf');
+    const romanizationDisplay = document.getElementById('hanzi-romanization-display');
     const placeholderMessage = document.getElementById('placeholder-message');
-    const hanziRomanizationDisplay = document.getElementById('hanzi-romanization-display');
 
     const writers = [];
 
-    const generateHanziSquares = (text) => {
+    function groupCharacters(text) {
+        return text.trim().split(/\s+/);
+    }
+
+    function generateHanziSquares(text) {
+        const phrases = groupCharacters(text);
         tianZiGeGrid.innerHTML = '';
         writers.length = 0;
-        hanziRomanizationDisplay.textContent = 'Romanization:';
 
-        if (text.trim().length === 0) {
+        if (!text.trim()) {
             placeholderMessage.style.display = 'block';
+            romanizationDisplay.textContent = 'Romanization:';
             return;
         } else {
             placeholderMessage.style.display = 'none';
         }
 
-        const phrases = text.trim().split(' ');
-        let currentRomanizationText = 'Romanization:';
+        romanizationDisplay.textContent = 'Romanization: ' + window.pinyin.getPinyin(text.replace(/\s/g, ''), ' ', false, false);
 
-        phrases.forEach((phrase, phraseIndex) => {
-            if (phrase.length > 0) {
-                const phraseContainer = document.createElement('div');
-                phraseContainer.classList.add('d-flex', 'flex-wrap', 'justify-content-center', 'mb-3');
+        phrases.forEach((phrase) => {
+            const phraseContainer = document.createElement('div');
+            phraseContainer.classList.add('phrase-container', 'd-flex', 'flex-row', 'mb-3', 'justify-content-center');
 
-                for (const char of phrase) {
-                    const squareContainer = document.createElement('div');
-                    squareContainer.classList.add('tian-zi-ge-square', 'border', 'border-secondary', 'm-1');
+            for (const char of phrase) {
+                const squareContainer = document.createElement('div');
+                squareContainer.classList.add('tian-zi-ge-square', 'border', 'border-secondary', 'm-1');
 
-                    const squareId = `hanzi-square-${char}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-                    squareContainer.id = squareId;
-                    phraseContainer.appendChild(squareContainer);
+                const squareId = `hanzi-square-${char}-${Math.random().toString(36).substr(2, 9)}`;
+                squareContainer.id = squareId;
+                phraseContainer.appendChild(squareContainer);
 
-                    const writer = HanziWriter.create(squareId, char, {
-                        width: 100,
-                        height: 100,
-                        padding: 5,
-                        strokeAnimationSpeed: 1,
-                        delayBetweenStrokes: 100,
-                        onComplete: (data) => {
-                            console.log(`Animación de ${data.character} completada.`);
-                        }
-                    });
+                const writer = HanziWriter.create(squareId, char, {
+                    width: 100,
+                    height: 100,
+                    padding: 5,
+                    strokeAnimationSpeed: 1,
+                    delayBetweenStrokes: 100,
+                    showOutline: true,
+                });
 
-                    squareContainer.addEventListener('click', () => {
-                        writer.animateCharacter();
-                    });
+                squareContainer.addEventListener('click', () => writer.animateCharacter());
 
-                    writers.push(writer);
-                    currentRomanizationText += ` ${char}`;
-                }
-
-                tianZiGeGrid.appendChild(phraseContainer);
-
-                if (phraseIndex < phrases.length - 1) {
-                    const separator = document.createElement('hr');
-                    separator.classList.add('w-100', 'my-2');
-                    tianZiGeGrid.appendChild(separator);
-                    currentRomanizationText += '   '; // Separador visual entre frases
-                }
+                writers.push(writer);
             }
-        });
 
-        hanziRomanizationDisplay.textContent = currentRomanizationText.trim();
-    };
+            tianZiGeGrid.appendChild(phraseContainer);
+        });
+    }
 
     hanziInput.addEventListener('input', (event) => {
-        const hanziText = event.target.value;
-        generateHanziSquares(hanziText);
+        const text = event.target.value;
+        generateHanziSquares(text);
     });
 
     animateAllButton.addEventListener('click', () => {
-        writers.forEach(writer => writer.animateCharacter());
+        writers.forEach((writer) => writer.animateCharacter());
     });
 
-    downloadPdfButton.addEventListener('click', async () => {
-        if (writers.length === 0) {
-            alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
-            return;
-        }
-
-        downloadPdfButton.textContent = 'Generating PDF...';
-        downloadPdfButton.disabled = true;
-
-        try {
-            const canvas = await html2canvas(tianZiGeGrid, { scale: 2 });
+    downloadPdfButton.addEventListener('click', () => {
+        html2canvas(tianZiGeGrid).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
-                format: 'a4'
+            const pdf = new window.jspdf.jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: [canvas.width, canvas.height + 100]
             });
 
-            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 10;
-
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-
-            pdf.save('hanzi-worksheet.pdf');
-            alert('PDF generado y descargado correctamente!');
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Hubo un error al generar el PDF. Revisa la consola para más detalles.');
-        } finally {
-            downloadPdfButton.textContent = 'Download PDF';
-            downloadPdfButton.disabled = false;
-        }
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('hanzi_worksheet.pdf');
+        });
     });
 
-    generateHanziSquares('你好');
+    // Footer year update
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Cargar ejemplo por defecto
+    generateHanziSquares('你好 世界');
 });
