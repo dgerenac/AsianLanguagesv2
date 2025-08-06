@@ -149,42 +149,33 @@ footer .footer-social-icon:hover {
   }
 }
 
-.button-30 {
-  align-items: center;
-  appearance: none;
-  background-color: #FCFCFD;
-  border-radius: 4px;
-  border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
-              rgba(45, 35, 66, 0.3) 0 7px 13px -3px,
-              #D6D6E7 0 -3px 0 inset;
-  box-sizing: border-box;
-  color: #36395A;
+.nav-button {
+  padding: 1.3em 3em;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
   cursor: pointer;
-  display: inline-flex;
-  font-family: "JetBrains Mono", monospace;
-  height: 40px;
-  justify-content: center;
-  line-height: 1;
-  margin: 0 5px;
-  overflow: hidden;
-  padding: 0 16px;
+  outline: none;
   text-decoration: none;
-  transition: box-shadow .15s, transform .15s;
-  user-select: none;
-  white-space: nowrap;
-  font-size: 16px;
+  display: inline-block;
 }
 
-.button-30:hover {
-  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
-              rgba(45, 35, 66, 0.3) 0 7px 13px -3px,
-              #D6D6E7 0 -3px 0 inset;
-  transform: translateY(-2px);
+.nav-button:hover {
+  background-color: #23c483;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
 }
 
-.button-30:active {
-  box-shadow: #D6D6E7 0 3px 7px inset;
-  transform: translateY(2px);
+.nav-button:active {
+  transform: translateY(-1px);
 }
+
 
