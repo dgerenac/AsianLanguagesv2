@@ -4,11 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const animateAllButton = document.getElementById('animate-all');
     const downloadPdfButton = document.getElementById('download-pdf');
     const placeholderMessage = document.getElementById('placeholder-message');
-
-    // Elementos del visor de PDF
-    const pdfViewerSection = document.getElementById('pdf-viewer-section');
-    const pdfViewer = document.getElementById('pdf-viewer');
-    const downloadFromViewerBtn = document.getElementById('download-from-viewer-btn');
+    const hanziRomanizationDisplay = document.getElementById('hanzi-romanization-display'); // Nuevo elemento
 
     const writers = []; // Este array almacenará las instancias de Hanzi Writer
 
@@ -19,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateHanziSquares = (text) => {
         tianZiGeGrid.innerHTML = ''; // Limpiar la cuadrícula actual
         writers.length = 0; // Limpiar el array de escritores
+        hanziRomanizationDisplay.textContent = 'Romanization: '; // Limpiar la romanización
 
         if (text.trim().length === 0) {
             placeholderMessage.style.display = 'block';
@@ -29,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Dividir el texto por espacios para obtener frases
         const phrases = text.trim().split(' ');
+        let currentRomanizationText = 'Romanization: ';
 
         // Recorrer cada frase
         phrases.forEach((phrase, phraseIndex) => {
@@ -66,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     writers.push(writer); // Almacenar la instancia para controlarla más tarde
+                    currentRomanizationText += char + ' '; // Añadir el carácter a la romanización
                 }
                 tianZiGeGrid.appendChild(phraseContainer);
 
@@ -74,9 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const separator = document.createElement('div');
                     separator.classList.add('p-2');
                     tianZiGeGrid.appendChild(separator);
+                    currentRomanizationText += '  '; // Añadir un espacio extra para separar frases en la romanización
                 }
             }
         });
+        hanziRomanizationDisplay.textContent = currentRomanizationText.trim(); // Mostrar la romanización
     };
 
     // Escuchar cambios en el input del usuario
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         generateHanziSquares(hanziText);
     });
 
-    // Lógica para la descarga de PDF (ahora genera y muestra una vista previa)
+    // Lógica para la descarga de PDF (se mantiene igual)
     downloadPdfButton.addEventListener('click', async () => {
         if (writers.length === 0) {
             alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
@@ -96,11 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPdfButton.disabled = true;
 
         try {
-            // Convertir la cuadrícula completa a una imagen
-            const canvas = await html2canvas(tianZiGeGrid, { scale: 2 });
+            const gridContainer = document.getElementById('tian-zi-ge-grid');
+            const canvas = await html2canvas(gridContainer, { scale: 2 });
             const imgData = canvas.toDataURL('image/png');
 
-            // Crear un nuevo documento PDF
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF({
                 orientation: 'p',
@@ -108,14 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 format: 'a4'
             });
 
-            // Obtener las dimensiones de la imagen y del PDF
-            const imgWidth = pdf.internal.pageSize.getWidth() - 20; // Ancho con márgenes
+            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
             const pageHeight = pdf.internal.pageSize.getHeight();
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             let heightLeft = imgHeight;
             let position = 10;
 
-            // Añadir la imagen al PDF, dividiéndola en varias páginas si es necesario
             pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
 
@@ -126,15 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 heightLeft -= pageHeight;
             }
 
-            // Generar el PDF como un blob y crear una URL
-            const pdfBlob = pdf.output('blob');
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-
-            // Mostrar la vista previa en el iframe
-            pdfViewer.src = pdfUrl;
-            pdfViewerSection.classList.remove('d-none'); // Mostrar la sección del visor
-            downloadFromViewerBtn.href = pdfUrl; // Configurar el enlace de descarga
-
+            pdf.save('hanzi-worksheet.pdf');
+            alert('PDF generado y descargado correctamente!');
         } catch (error) {
             console.error('Error generating PDF:', error);
             alert('Hubo un error al generar el PDF. Por favor, revisa la consola para más detalles.');
@@ -144,6 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Generate some default characters on page load
+    // Generar caracteres por defecto al cargar la página
     generateHanziSquares('你好');
 });
