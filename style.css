@@ -18,13 +18,14 @@ header {
 
 header h1 {
     margin: 0;
-    /* Tamaño del título principal ajustado para ser consistente en todas las páginas */
-    font-size: 1.25rem; /* Tamaño deseado por el usuario */
+    /* Ajuste de tamaño para el título principal (Asian Languages...) */
+    /* Mínimo 1.5rem, preferido 4vw (4% del ancho del viewport), máximo 2.5rem */
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
 }
 
 /* Estilos para los nombres de los idiomas en chino, coreano y japonés */
 .hanzi, .hangul, .japanese {
-    /* Tamaño de la fuente ajustado para que sea más sutil */
+    /* Tamaño de la fuente ajustado para que sea más sutil y consistente */
     font-size: 1em;
     text-align: left;
 }
@@ -79,8 +80,9 @@ h2, h3 {
     color: #2980b9;
     text-align: left;
     margin-bottom: 15px;
-    /* Tamaño de la fuente para títulos de sección ajustado para ser más pequeño */
-    font-size: 1.5rem; /* Ajuste para desktop */
+    /* Ajuste de tamaño para h2 y h3 */
+    /* Mínimo 1.2rem, preferido 3vw, máximo 1.8rem */
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
 }
 
 /* Estilo para el texto de explicación */
@@ -239,41 +241,8 @@ footer {
     text-align: justify;
 }
 
-/* Media Queries para responsividad */
-@media (max-width: 992px) { /* Para pantallas de tabletas y laptops pequeñas */
-    header h1 {
-        font-size: 1.1rem;
-    }
-    h2, h3 {
-        font-size: 1.2rem; /* Ajuste para pantallas medianas */
-    }
-    .display-4 {
-        font-size: 1.8rem; /* Ajuste para pantallas medianas */
-    }
-}
-
-@media (max-width: 768px) { /* Para pantallas de tabletas en vertical y móviles grandes */
-    header h1 {
-        font-size: 1rem;
-    }
-    h2, h3 {
-        font-size: 1rem; /* Ajuste para pantallas más pequeñas */
-    }
-    .display-4 {
-        font-size: 1.5rem; /* Ajuste para pantallas más pequeñas */
-    }
-}
-
+/* Media Queries para responsividad (ahora más simples gracias a clamp()) */
 @media (max-width: 576px) { /* Para pantallas de móviles pequeños */
-    header h1 {
-        font-size: 0.9rem;
-    }
-    h2, h3 {
-        font-size: 0.9rem;
-    }
-    .display-4 {
-        font-size: 1.2rem; /* Ajuste para móviles */
-    }
     .lead {
         font-size: 0.8rem;
     }
