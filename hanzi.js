@@ -1,7 +1,5 @@
-// Arreglo global de escritores HanziWriter
 let hanziWriters = [];
 
-// Función principal para generar los cuadros y funcionalidades
 function generateHanziSquares(text) {
   const grid = document.getElementById('tian-zi-ge-grid');
   const roman = document.getElementById('hanzi-romanization-display');
@@ -15,11 +13,12 @@ function generateHanziSquares(text) {
     placeholder.style.display = 'block';
     return;
   }
+
   placeholder.style.display = 'none';
 
-  Array.from(text).forEach((char, i) => {
+  Array.from(text).forEach((char, index) => {
     const container = document.createElement('div');
-    container.id = `hanzi-${i}`;
+    container.id = `hanzi-${index}`;
     container.className = 'hanzi-square';
     container.style.width = '100px';
     container.style.height = '100px';
@@ -46,18 +45,21 @@ function generateHanziSquares(text) {
   });
 }
 
-
-// Inicializar al cargar la página con “你好”
 document.addEventListener('DOMContentLoaded', () => {
   generateHanziSquares('你好');
 
   const input = document.getElementById('hanzi-input');
-  input.addEventListener('input', e => {
-    generateHanziSquares(e.target.value);
-  });
+  if (input) {
+    input.addEventListener('input', (e) => {
+      const value = e.target.value;
+      generateHanziSquares(value);
+    });
+  }
 
-  document.getElementById('animate-all').addEventListener('click', () => {
-    hanziWriters.forEach(w => w.animateCharacter());
-  });
+  const animateButton = document.getElementById('animate-all');
+  if (animateButton) {
+    animateButton.addEventListener('click', () => {
+      hanziWriters.forEach(writer => writer.animateCharacter());
+    });
+  }
 });
-
