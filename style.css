@@ -1,32 +1,61 @@
+/* Variables CSS (Custom Properties) */
+/* Definimos colores y tamaños de fuente base que se pueden reutilizar */
+:root {
+    --color-background-body: #e8ffe99c;
+    --color-text-main: #333;
+    --color-header-bg: #151B54;
+    --color-header-text: white;
+    --color-nav-hover: #FFFF33;
+    --color-main-bg: rgb(255, 255, 255);
+    --color-main-shadow: rgb(138, 156, 255);
+    --color-section-border: #ffffff;
+    --color-headings: #2980b9;
+    --color-explanation-text: #555;
+    --color-link: #2980b9;
+    --color-link-hover: #e74c3c;
+    --color-placeholder-bg: #dddddd;
+    --color-placeholder-border: #e7f9ff;
+    --color-placeholder-text: #666;
+    --color-tian-zi-ge-border: #ccc;
+    --color-idioma-chino: #d9534f;
+    --color-idioma-coreano: #0275d8;
+    --color-idioma-japones: #ff9900;
+    --color-btn-primary-bg: #5cb85c;
+    --color-btn-primary-border: #5cb85c;
+
+    /* Tamaños de fuente fluidos usando clamp() */
+    --font-size-h1: clamp(1.5rem, 4vw, 2.5rem);
+    --font-size-h2-h3: clamp(1.2rem, 3vw, 1.8rem);
+    --font-size-display4: clamp(1.5rem, 3.5vw, 2.5rem); /* Ajuste específico para .display-4 */
+    --font-size-lead: clamp(1rem, 2.5vw, 1.1rem); /* Ajuste para texto lead */
+}
+
 /* Estilos Globales para todo el cuerpo de la página */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e8ffe99c;
-    color: #333; /* Color de texto principal */
+    background-color: var(--color-background-body);
+    color: var(--color-text-main);
     line-height: 1.6; /* Espaciado de línea para mejor legibilidad */
 }
 
 /* Estilos del encabezado principal */
 header {
-    background-color: #151B54;
-    color: white;
+    background-color: var(--color-header-bg);
+    color: var(--color-header-text);
     padding: 1rem 20px;
     text-align: left;
 }
 
 header h1 {
     margin: 0;
-    /* Ajuste de tamaño para el título principal (Asian Languages...) */
-    /* Mínimo 1.5rem, preferido 4vw (4% del ancho del viewport), máximo 2.5rem */
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-size: var(--font-size-h1);
 }
 
 /* Estilos para los nombres de los idiomas en chino, coreano y japonés */
 .hanzi, .hangul, .japanese {
-    /* Tamaño de la fuente ajustado para que sea más sutil y consistente */
-    font-size: 1em;
+    font-size: 1em; /* Relativo al tamaño de fuente del padre */
     text-align: left;
 }
 
@@ -45,13 +74,13 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: var(--color-header-text); /* Usa la variable de color de texto del header */
     text-decoration: none;
     font-weight: bold;
 }
 
 nav ul li a:hover {
-    color: #FFFF33; /* Color de resaltado al pasar el cursor */
+    color: var(--color-nav-hover); /* Usa la variable de color de hover */
 }
 
 /* Estilos del contenido principal */
@@ -59,16 +88,16 @@ main {
     padding: 20px;
     max-width: 1450px;
     margin: 20px auto;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--color-main-bg);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgb(138, 156, 255);
+    box-shadow: 0 2px 4px var(--color-main-shadow);
 }
 
 /* Estilos para las secciones */
 section {
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #ffffff; /* Sutil línea divisoria */
+    border-bottom: 1px solid var(--color-section-border);
 }
 
 section:last-child {
@@ -77,18 +106,16 @@ section:last-child {
 
 /* Estilos para títulos de sección (h2, h3) */
 h2, h3 {
-    color: #2980b9;
+    color: var(--color-headings);
     text-align: left;
     margin-bottom: 15px;
-    /* Ajuste de tamaño para h2 y h3 */
-    /* Mínimo 1.2rem, preferido 3vw, máximo 1.8rem */
-    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-size: var(--font-size-h2-h3);
 }
 
 /* Estilo para el texto de explicación */
 .explanation-text {
     font-size: 1.1rem;
-    color: #555;
+    color: var(--color-explanation-text);
     text-align: justify;
     margin-top: 20px;
 }
@@ -111,12 +138,12 @@ ul li {
 
 /* Estilos para enlaces */
 a {
-    color: #2980b9;
+    color: var(--color-link);
     text-decoration: underline;
 }
 
 a:hover {
-    color: #e74c3c; /* Color de resaltado para enlaces */
+    color: var(--color-link-hover);
 }
 
 /* Estilos para imágenes */
@@ -138,8 +165,8 @@ img {
 
 /* Estilos para el pie de página */
 footer {
-    background-color: #151B54;
-    color: white;
+    background-color: var(--color-header-bg); /* Reutiliza el color del header */
+    color: var(--color-header-text); /* Reutiliza el color de texto del header */
     text-align: center;
     padding: 1rem 0;
     margin-top: 30px;
@@ -149,11 +176,11 @@ footer {
 
 /* Clases de utilidad para placeholders */
 .videoph, .chart-placeholder {
-    background-color: #dddddd;
-    border: 1px dashed #e7f9ff;
+    background-color: var(--color-placeholder-bg);
+    border: 1px dashed var(--color-placeholder-border);
     padding: 20px;
     text-align: center;
-    color: #666;
+    color: var(--color-placeholder-text);
     margin-top: 20px;
     border-radius: 5px;
 }
@@ -190,7 +217,7 @@ footer {
 .tian-zi-ge-square {
     width: 100px;
     height: 100px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-tian-zi-ge-border);
     margin: 5px;
     display: flex;
     justify-content: center;
@@ -200,24 +227,24 @@ footer {
 
 /* Estilos de los idiomas en los títulos */
 .idioma-chino {
-    color: #d9534f;
+    color: var(--color-idioma-chino);
 }
 .idioma-coreano {
-    color: #0275d8;
+    color: var(--color-idioma-coreano);
 }
-.idioma-japones { /* Nuevo estilo para el idioma Japonés */
-    color: #ff9900; /* Color de ejemplo, puedes ajustarlo */
+.idioma-japones {
+    color: var(--color-idioma-japones);
 }
 
 /* Estilos para botones de Bootstrap (ejemplo de personalización) */
 .btn-primary {
-    background-color: #5cb85c;
-    border-color: #5cb85c;
+    background-color: var(--color-btn-primary-bg);
+    border-color: var(--color-btn-primary-border);
 }
 
 /* Estilos para cajas de tarjetas (ej. en About Us) */
 .card-box {
-    background-color: #ffffff;
+    background-color: var(--color-main-bg); /* Reutiliza el color de fondo principal */
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -231,14 +258,21 @@ footer {
 
 .card-title {
     font-size: 1.5rem;
-    color: #2980b9;
+    color: var(--color-headings); /* Reutiliza el color de los títulos */
     margin-bottom: 10px;
     font-weight: bold;
 }
 
 .card-text {
-    color: #444;
+    font-size: var(--font-size-lead); /* Ajuste para texto lead */
+    color: var(--color-explanation-text); /* Reutiliza el color de texto de explicación */
     text-align: justify;
+}
+
+/* Ajuste específico para la clase .display-4 de Bootstrap */
+.display-4 {
+    /* Mínimo 1.5rem, preferido 3.5vw, máximo 2.5rem */
+    font-size: var(--font-size-display4);
 }
 
 /* Media Queries para responsividad (ahora más simples gracias a clamp()) */
