@@ -4,18 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const animateAllButton = document.getElementById('animate-all');
     const downloadPdfButton = document.getElementById('download-pdf');
     const placeholderMessage = document.getElementById('placeholder-message');
-    const hanziRomanizationDisplay = document.getElementById('hanzi-romanization-display'); // Nuevo elemento
+    const hanziRomanizationDisplay = document.getElementById('hanzi-romanization-display'); // Nuevo elemento para romanización
 
     const writers = []; // Este array almacenará las instancias de Hanzi Writer
 
     /**
-     * Genera los cuadros interactivos para cada Hanzi character.
+     * Genera los cuadros interactivos para cada carácter Hanzi.
      * @param {string} text El texto a generar.
      */
     const generateHanziSquares = (text) => {
         tianZiGeGrid.innerHTML = ''; // Limpiar la cuadrícula actual
         writers.length = 0; // Limpiar el array de escritores
-        hanziRomanizationDisplay.textContent = 'Romanization: '; // Limpiar la romanización
+        hanziRomanizationDisplay.textContent = 'Romanization: '; // Limpiar la romanización al generar nuevos caracteres
 
         if (text.trim().length === 0) {
             placeholderMessage.style.display = 'block';
@@ -26,23 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Dividir el texto por espacios para obtener frases
         const phrases = text.trim().split(' ');
-        let currentRomanizationText = 'Romanization: ';
+        let currentRomanizationText = 'Romanization: '; // Variable para construir el texto de romanización
 
         // Recorrer cada frase
         phrases.forEach((phrase, phraseIndex) => {
             if (phrase.length > 0) {
                 // Crear un contenedor para la frase
                 const phraseContainer = document.createElement('div');
-                phraseContainer.classList.add('d-flex', 'flex-wrap');
+                phraseContainer.classList.add('d-flex', 'flex-wrap'); // Usar flexbox para los caracteres de la frase
 
                 // Recorrer cada carácter de la frase
                 for (const char of phrase) {
-                    // Crear un contenedor para el Hanzi writer
+                    // Crear un contenedor para el Hanzi writer (el cuadro individual)
                     const squareContainer = document.createElement('div');
                     squareContainer.classList.add('tian-zi-ge-square', 'border', 'border-secondary', 'm-1');
 
                     // Hanzi Writer necesita un ID único para cada SVG que renderiza
-                    const squareId = `hanzi-square-${char}-${Date.now()}`;
+                    const squareId = `hanzi-square-${char}-${Date.now()}`; // Generar un ID único
                     squareContainer.id = squareId;
                     phraseContainer.appendChild(squareContainer);
 
@@ -64,20 +64,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     writers.push(writer); // Almacenar la instancia para controlarla más tarde
-                    currentRomanizationText += char + ' '; // Añadir el carácter a la romanización
+                    currentRomanizationText += char + ' '; // Añadir el carácter a la cadena de romanización
                 }
-                tianZiGeGrid.appendChild(phraseContainer);
+                tianZiGeGrid.appendChild(phraseContainer); // Añadir el contenedor de la frase a la cuadrícula principal
 
-                // Añadir un separador visual entre frases (si no es la última)
+                // Añadir un separador visual entre frases (si no es la última frase)
                 if (phraseIndex < phrases.length - 1) {
                     const separator = document.createElement('div');
-                    separator.classList.add('p-2');
+                    separator.classList.add('p-2'); // Un pequeño padding para el espacio
                     tianZiGeGrid.appendChild(separator);
                     currentRomanizationText += '  '; // Añadir un espacio extra para separar frases en la romanización
                 }
             }
         });
-        hanziRomanizationDisplay.textContent = currentRomanizationText.trim(); // Mostrar la romanización
+        hanziRomanizationDisplay.textContent = currentRomanizationText.trim(); // Actualizar el display de romanización
     };
 
     // Escuchar cambios en el input del usuario
@@ -86,7 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
         generateHanziSquares(hanziText);
     });
 
-    // Lógica para la descarga de PDF (se mantiene igual)
+    // Botón para animar todos los caracteres a la vez
+    animateAllButton.addEventListener('click', () => {
+        writers.forEach(writer => {
+            writer.animateCharacter();
+        });
+    });
+
+    // Lógica para la descarga de PDF
     downloadPdfButton.addEventListener('click', async () => {
         if (writers.length === 0) {
             alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
@@ -97,10 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPdfButton.disabled = true;
 
         try {
-            const gridContainer = document.getElementById('tian-zi-ge-grid');
-            const canvas = await html2canvas(gridContainer, { scale: 2 });
+            // Convertir la cuadrícula completa a una imagen
+            const canvas = await html2canvas(tianZiGeGrid, { scale: 2 });
             const imgData = canvas.toDataURL('image/png');
 
+            // Crear un nuevo documento PDF
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF({
                 orientation: 'p',
@@ -108,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 format: 'a4'
             });
 
-            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
+            // Obtener las dimensiones de la imagen y del PDF
+            const imgWidth = pdf.internal.pageSize.getWidth() - 20; // Ancho con márgenes
             const pageHeight = pdf.internal.pageSize.getHeight();
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             let heightLeft = imgHeight;
