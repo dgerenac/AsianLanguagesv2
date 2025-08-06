@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholderMessage.style.display = 'none';
         }
 
-        romanizationDisplay.textContent = 'Romanization: ' + window.pinyin.getPinyin(text.replace(/\s/g, ''), ' ', false, false);
+        romanizationDisplay.textContent = 'Romanization: ' + Pinyin.convertToPinyin(text.replace(/\s/g, ''), ' ', false);
+
 
         phrases.forEach((phrase) => {
             const phraseContainer = document.createElement('div');
