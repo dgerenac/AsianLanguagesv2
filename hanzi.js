@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const animateAllButton = document.getElementById('animate-all');
     const downloadPdfButton = document.getElementById('download-pdf');
     const placeholderMessage = document.getElementById('placeholder-message');
-    const hanziRomanizationDisplay = document.getElementById('hanzi-romanization-display'); // Nuevo elemento para romanización
+    const hanziRomanizationDisplay = document.getElementById('hanzi-romanization-display'); // Elemento para romanización
 
     const writers = []; // Este array almacenará las instancias de Hanzi Writer
 
