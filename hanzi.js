@@ -92,3 +92,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Mostrar ejemplo "你好" al cargar la página
+  generateHanziSquares("你好");
+
+  // Escuchar cambios en el input
+  const hanziInput = document.getElementById("hanzi-input");
+  hanziInput.addEventListener("input", () => {
+    const value = hanziInput.value.trim();
+    if (value === "") {
+      generateHanziSquares("你好"); // Si el usuario borra todo, mostrar el ejemplo otra vez
+    } else {
+      generateHanziSquares(value); // Mostrar los caracteres del usuario
+    }
+  });
+});
+
