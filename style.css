@@ -1,3 +1,4 @@
+/* Variables */
 /* GENERAL RESET */
 * {
   margin: 0;
@@ -16,32 +17,22 @@ header {
   background-color: #1d1d1d;
   padding: 1rem 0;
 }
-
 header h1 {
   font-size: 2rem;
   text-align: center;
 }
-
-.site-title-wrapper span {
+header .site-title-wrapper span {
   font-weight: bold;
   font-size: 1.4rem;
   margin-left: 0.25rem;
 }
-
-.nav .nav-link {
+header .nav .nav-link {
   color: #bbb;
   transition: color 0.3s ease;
 }
-
-.nav .nav-link {
-  color: #bbb;
-  transition: color 0.3s ease;
+header .nav .nav-link:hover {
+  color: #ffc107;
 }
-
-.nav .nav-link:hover {
-  color: #ffc107; /* Amarillo Bootstrap */
-}
-
 
 /* MAIN SECTIONS */
 section {
@@ -52,8 +43,8 @@ section {
 }
 
 h2.display-4 {
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: #343a40;
 }
 
@@ -96,12 +87,10 @@ footer {
   background-color: #1d1d1d;
   color: white;
 }
-
 footer .footer-social-icon {
   filter: grayscale(100%);
   transition: filter 0.3s ease, transform 0.3s ease;
 }
-
 footer .footer-social-icon:hover {
   filter: grayscale(0%);
   transform: scale(1.1);
@@ -138,11 +127,54 @@ footer .footer-social-icon:hover {
 /* MEDIA QUERIES */
 @media (max-width: 768px) {
   header h1 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
-
   .display-4 {
-    font-size: 1.75rem;
+    font-size: 1rem;
   }
+}
+.sticky-footer {
+  position: sticky;
+  top: 100vh;
+  transform: translateY(-100%);
+}
 
+<<<<<<< HEAD
  
+=======
+.ratio iframe {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.introduction-section .intro-text-container {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.introduction-section .intro-text-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para los cuadros de escritura de Hanzi */
+.tian-zi-ge-square {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ddd;
+  margin: 5px;
+}
+.tian-zi-ge-square::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><line x1="0" y1="0" x2="100" y2="100" stroke="%23DDD" /><line x1="100" y1="0" x2="0" y2="100" stroke="%23DDD" /><line x1="50" y1="0" x2="50" y2="100" stroke="%23DDD" /><line x1="0" y1="50" x2="100" y2="50" stroke="%23DDD" /></svg>');
+  background-size: contain;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/*# sourceMappingURL=style.css.map */
+>>>>>>> 6900e78 (new webpage release)
