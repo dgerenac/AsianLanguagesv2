@@ -1,21 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // ... tus variables de elementos del DOM ...
     const hangulInput = document.getElementById('hangul-input');
     const hangulWritingGrid = document.getElementById('hangul-writing-grid');
     const clearAllButton = document.getElementById('clear-all');
     const downloadPdfButton = document.getElementById('download-pdf');
     const placeholderMessage = document.getElementById('placeholder-message');
-    const hangulRomanizationDisplay = document.getElementById('hangul-romanization-display'); // Nuevo elemento
+    const hangulRomanizationDisplay = document.getElementById('hangul-romanization-display');
 
-    const canvases = []; // Almacenará las instancias de canvas
+    const canvases = []; 
 
-    /**
-     * Genera los cuadros interactivos para cada carácter de Hangul.
-     * @param {string} text Los caracteres a generar.
-     */
     const generateHangulSquares = (text) => {
-        hangulWritingGrid.innerHTML = ''; // Limpia la cuadrícula actual
-        canvases.length = 0; // Limpia el array de canvases
-        hangulRomanizationDisplay.textContent = 'Romanization: '; // Limpiar la romanización
+        hangulWritingGrid.innerHTML = '';
+        canvases.length = 0;
+        hangulRomanizationDisplay.textContent = 'Romanization: ';
 
         if (text.trim().length === 0) {
             placeholderMessage.style.display = 'block';
@@ -24,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholderMessage.style.display = 'none';
         }
 
-        // Dividir el texto por espacios para obtener frases
         const phrases = text.trim().split(' ');
         let currentRomanizationText = 'Romanization: ';
 
@@ -35,44 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 for (const char of phrase) {
                     const squareContainer = document.createElement('div');
-                    squareContainer.classList.add('hangul-square-container', 'border', 'border-secondary', 'm-1', 'p-0');
-                    squareContainer.style.width = '100px';
-                    squareContainer.style.height = '100px';
-                    squareContainer.style.position = 'relative';
+                    squareContainer.classList.add('hangul-square-container');
+                    phraseContainer.appendChild(squareContainer);
+
+                    const charDisplay = document.createElement('div');
+                    charDisplay.textContent = char;
+                    charDisplay.classList.add('char-display'); // Usamos la nueva clase de CSS
+                    squareContainer.appendChild(charDisplay);
 
                     const canvas = document.createElement('canvas');
                     canvas.width = 100;
                     canvas.height = 100;
-                    canvas.style.position = 'absolute';
-                    canvas.style.top = '0';
-                    canvas.style.left = '0';
                     squareContainer.appendChild(canvas);
-                    
-                    const charDisplay = document.createElement('div');
-                    charDisplay.textContent = char;
-                    charDisplay.style.fontSize = '3em';
-                    charDisplay.style.textAlign = 'center';
-                    charDisplay.style.color = '#ccc';
-                    charDisplay.style.position = 'absolute';
-                    charDisplay.style.top = '50%';
-                    charDisplay.style.left = '50%';
-                    charDisplay.style.transform = 'translate(-50%, -50%)';
-                    charDisplay.style.pointerEvents = 'none'; // Para que no bloquee el canvas
-                    squareContainer.appendChild(charDisplay);
 
-                    phraseContainer.appendChild(squareContainer);
                     canvases.push(canvas);
-
-                    // Lógica para dibujar el carácter al hacer clic
-                    squareContainer.addEventListener('click', () => {
-                        const ctx = canvas.getContext('2d');
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.fillStyle = '#333';
-                        ctx.font = '72px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(char, canvas.width / 2, canvas.height / 2);
-                    });
 
                     // Lógica para dibujar con el mouse/táctil
                     let isDrawing = false;
@@ -81,9 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.lineWidth = 3;
                     ctx.lineCap = 'round';
 
+                    // ... (El resto de la lógica de dibujo, que ya tenías, se mantiene igual)
                     const startDrawing = (e) => {
                         isDrawing = true;
-                        charDisplay.style.color = 'transparent'; // Oculta el carácter gris al empezar a dibujar
+                        charDisplay.style.visibility = 'hidden'; // Oculta el carácter gris al empezar a dibujar
                         const pos = getMousePos(canvas, e);
                         ctx.beginPath();
                         ctx.moveTo(pos.x, pos.y);
@@ -104,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const getMousePos = (canvas, event) => {
                         const rect = canvas.getBoundingClientRect();
                         let clientX, clientY;
-
                         if (event.touches) {
                             clientX = event.touches[0].clientX;
                             clientY = event.touches[0].clientY;
@@ -112,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             clientX = event.clientX;
                             clientY = event.clientY;
                         }
-
                         return {
                             x: clientX - rect.left,
                             y: clientY - rect.top
@@ -123,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     canvas.addEventListener('mousemove', draw);
                     canvas.addEventListener('mouseup', stopDrawing);
                     canvas.addEventListener('mouseout', stopDrawing);
-
                     canvas.addEventListener('touchstart', (e) => {
                         e.preventDefault();
                         startDrawing(e);
@@ -133,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         draw(e);
                     });
                     canvas.addEventListener('touchend', stopDrawing);
+                    
                 }
                 hangulWritingGrid.appendChild(phraseContainer);
 
@@ -143,25 +114,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        hangulRomanizationDisplay.textContent = currentRomanizationText.trim(); // Mostrar la romanización
+        hangulRomanizationDisplay.textContent = currentRomanizationText.trim();
     };
 
-    // Escucha cambios en el input del usuario
+    // ... (El resto de los listeners para `input`, `clearAllButton`, `downloadPdfButton` se mantienen igual)
     hangulInput.addEventListener('input', (event) => {
         const hangulText = event.target.value;
         generateHangulSquares(hangulText);
     });
-    
-    // Botón para borrar todos los canvas
+
     clearAllButton.addEventListener('click', () => {
         canvases.forEach(canvas => {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         });
+        // También volvemos a mostrar el carácter de fondo después de borrar
+        const charDisplays = document.querySelectorAll('.char-display');
+        charDisplays.forEach(display => display.style.visibility = 'visible');
     });
 
-    // Lógica para el botón de descarga de PDF (se mantiene igual)
     downloadPdfButton.addEventListener('click', async () => {
+        // ... (Tu código de descarga de PDF, que está correcto)
         if (canvases.length === 0) {
             alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
             return;
@@ -172,6 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const gridContainer = document.getElementById('hangul-writing-grid');
+            // Aseguramos que la cuadrícula de fondo se renderice en el PDF
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = gridContainer.outerHTML;
+            tempDiv.querySelector('.hangul-writing-grid').style.backgroundImage = 'none'; // Desactivamos la cuadrícula de fondo para el HTML2Canvas
+            
+            // Creamos un canvas con el contenido visible
             const canvas = await html2canvas(gridContainer, { scale: 2 });
             const imgData = canvas.toDataURL('image/png');
 
@@ -209,6 +188,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Generar la palabra "annyeong" por defecto al cargar la página
-    generateHangulSquares('안녕!');
+    generateHangulSquares('안녕하세요');
 });
