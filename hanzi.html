@@ -5,23 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hanzi - Asian Languages</title>
 
-    <!-- Bootstrap para estilos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-
-    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Librerías necesarias -->
-       <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@2.2.2/dist/hanzi-writer.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/tiny-pinyin/lib/tiny-pinyin.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@2.2.2/dist/hanzi-writer.min.js"></script>
 </head>
 
+     <!-- Averiguar y cambiar el idioma-chino a ingles  -->
 <body>
-
-    <!-- Header -->
     <header class="bg-dark text-white py-3">
         <div class="container">
             <div class="row align-items-center">
@@ -42,14 +33,14 @@
             </div>
         </div>
     </header>
-
-    <!-- Main Content -->
+    
+   
     <main class="container my-4">
 
-        <!-- Introducción -->
+    
         <section class="hanzi-introduction text-center mb-5">
             <h2 class="display-4">Hanzi 汉字 to learn</h2>
-            <p class="lead">You can select all the Hanzi you're interested in and get a PDF based on the template below.</p>
+            <p class="lead">You can write all the text you're interested in and get a PDF with all the worksheets for you to work on.</p>
         </section>
 
         <!-- Entrada y cuadrícula de Hanzi -->
@@ -59,51 +50,26 @@
                     <div class="mb-3">
                         <label for="hanzi-input" class="form-label fs-5">Enter Hanzi characters:</label>
                         <input type="text" id="hanzi-input" class="form-control form-control-lg" placeholder="e.g., 你好, 汉字">
-
                     </div>
                 </div>
             </div>
 
-            <!-- Cuadrícula de escritura -->
             <section class="tian-zi-ge-section text-center">
                 <h2 class="mb-4">Hanzi writing worksheet</h2>
                 <div id="tian-zi-ge-grid" class="tian-zi-ge-grid d-flex flex-wrap justify-content-center border p-3">
-                <div id="placeholder-message" class="text-muted mt-3">Escribe caracteres chinos para ver la hoja de trabajo.</div>
+                    <!-- Los cuadrados interactivos se generarán aquí con JavaScript -->
+                    <div id="placeholder-message" class="text-muted mt-3">Escribe caracteres chinos para ver la hoja de trabajo.</div>
                 </div>
-
-                </div>
-
-                <!-- Romanización -->
-                <div id="hanzi-romanization-display" class="text-center mt-3 fs-5 text-muted">
-                    Romanization:
-                </div>
-
-                <!-- Botones -->
+                <!-- Botones para controlar la animación y el PDF -->
                 <div class="mt-3">
-                    <button id="animate-all" class="btn btn-success me-2">Animate All</button>
+                    <button id="animate-all" class="btn btn-success me-2">Write them</button>
                     <button id="download-pdf" class="btn btn-info">Download PDF</button>
                 </div>
             </section>
         </section>
 
-        <!-- Lecciones -->
-        <section class="lesson-overview bg-light p-4 rounded mb-5">
-            <h3 class="mb-3">Lessons for Chinese 中文</h3>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Introduction for basic brushstrokes on Hanzi</li>
-                <li class="list-group-item">Pictograms (象形字 - xiàngxíngzì)</li>
-                <li class="list-group-item">Simple Indicatives (指事字 - zhǐshìzì)</li>
-                <li class="list-group-item">Associative Compounds (会意字 - huìyìzì)</li>
-                <li class="list-group-item">Picto-phonetic characters (形声字 - xíngshēngzì)</li>
-                <li class="list-group-item">Phonetic Loan characters (假借字 - jiǎjièzì)</li>
-                <li class="list-group-item">Mutually Explanatory (转注字 - zhuǎnzhùzì)</li>
-            </ul>
-            <a href="#" class="btn btn-primary mt-3">I'm still building this up</a>
-        </section>
-    </main>
-
     <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3">
+   <footer class="bg-dark text-white text-center py-3">
         <div class="container">
             <p class="mb-2">&copy; <span id="current-year"></span> All rights reserved, by David.</p>
             <div class="d-flex justify-content-center">
@@ -115,13 +81,91 @@
         </div>
     </footer>
 
-    <!-- Script principal -->
-    <script src="hanzi.js"></script>
-
-    <!-- Año automático en el footer -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
+        // Script para actualizar el año en el footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
 
+        // ------------------------------------------------------------------------------------------------
+        // Lógica interactiva con Hanzi Writer
+        // ------------------------------------------------------------------------------------------------
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const hanziInput = document.getElementById('hanzi-input');
+            const tianZiGeGrid = document.getElementById('tian-zi-ge-grid');
+            const animateAllButton = document.getElementById('animate-all');
+            const placeholderMessage = document.getElementById('placeholder-message');
+
+            const writers = []; // Almacenará las instancias de Hanzi Writer
+
+            /**
+             * Genera los cuadrados interactivos para cada carácter.
+             * @param {string} characters Los caracteres a generar.
+             */
+            const generateHanziSquares = (characters) => {
+                tianZiGeGrid.innerHTML = ''; // Limpia la cuadrícula actual
+                writers.length = 0; // Limpia el array de escritores
+
+                if (characters.length === 0) {
+                    placeholderMessage.style.display = 'block';
+                    return;
+                } else {
+                    placeholderMessage.style.display = 'none';
+                }
+
+                // Recorremos cada carácter del texto ingresado
+                for (const char of characters) {
+                    const squareContainer = document.createElement('div');
+                    squareContainer.classList.add('tian-zi-ge-square', 'border', 'border-secondary', 'm-1');
+
+                    // Hanzi Writer necesita un ID único para renderizar el SVG en cada cuadro
+                    const squareId = `hanzi-square-${char}-${Date.now()}`;
+                    squareContainer.id = squareId;
+                    tianZiGeGrid.appendChild(squareContainer);
+
+                    // Crear una nueva instancia de Hanzi Writer para cada cuadro
+                    // Si el carácter no tiene datos de trazo, Hanzi Writer mostrará una advertencia en la consola
+                    const writer = HanziWriter.create(squareId, char, {
+                        width: 100,
+                        height: 100,
+                        padding: 5,
+                        strokeAnimationSpeed: 1, // Velocidad de la animación del trazo
+                        delayBetweenStrokes: 100, // Retraso entre trazos
+                        onComplete: (data) => {
+                            console.log(`Animación de ${data.character} completada.`);
+                        }
+                    });
+
+                    // Hacer que cada cuadro sea interactivo (se anima al hacer clic)
+                    squareContainer.addEventListener('click', () => {
+                        writer.animateCharacter();
+                    });
+
+                    writers.push(writer); // Guardamos la instancia para poder controlarla más tarde
+                }
+            };
+
+            // Escucha cambios en el input del usuario
+            hanziInput.addEventListener('input', (event) => {
+                const hanziText = event.target.value.replace(/\s/g, ''); // Eliminamos los espacios
+                generateHanziSquares(hanziText);
+            });
+            
+            // Botón para animar todos los caracteres a la vez
+            animateAllButton.addEventListener('click', () => {
+                writers.forEach(writer => {
+                    writer.animateCharacter();
+                });
+            });
+
+            // Lógica para el botón de descarga de PDF (Placeholder por ahora)
+            document.getElementById('download-pdf').addEventListener('click', () => {
+                alert('La funcionalidad para descargar el PDF está en desarrollo. ¡Pronto estará disponible!');
+            });
+
+            // Generar algunos cuadrados por defecto al cargar la página
+            generateHanziSquares('你好');
+        });
+    </script>
 </body>
 </html>
