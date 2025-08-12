@@ -1,13 +1,12 @@
 let hanziWriters = [];
 
+// Función para generar los cuadrados interactivos de los caracteres
 function generateHanziSquares(text) {
   const grid = document.getElementById('tian-zi-ge-grid');
-  const roman = document.getElementById('hanzi-romanization-display');
   const placeholder = document.getElementById('placeholder-message');
 
   grid.innerHTML = '';
   hanziWriters = [];
-  roman.textContent = 'Romanization:';
 
   if (!text || !text.trim()) {
     placeholder.style.display = 'block';
@@ -16,13 +15,13 @@ function generateHanziSquares(text) {
 
   placeholder.style.display = 'none';
 
+  // Recorre cada carácter del texto y crea un cuadro de escritura
   Array.from(text).forEach((char, index) => {
     const container = document.createElement('div');
     container.id = `hanzi-${index}`;
-    container.className = 'hanzi-square';
+    container.className = 'tian-zi-ge-square border border-secondary m-1'; // Usa las clases de Bootstrap que tenías en HTML
     container.style.width = '100px';
     container.style.height = '100px';
-    container.style.margin = '5px';
     grid.appendChild(container);
 
     const writer = HanziWriter.create(container.id, char, {
@@ -37,29 +36,41 @@ function generateHanziSquares(text) {
     hanziWriters.push(writer);
 
     container.addEventListener('click', () => writer.animateCharacter());
-
-    if (window.Pinyin && Pinyin.isSupported()) {
-      const p = Pinyin.convertToPinyin(char, '', true);
-      roman.textContent += ` ${p}`;
-    }
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// Función para inicializar los eventos y la lógica al cargar la página
+function init() {
+  // Actualizar el año en el footer
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+
+  // Genera los cuadrados por defecto al cargar la página
   generateHanziSquares('你好');
 
-  const input = document.getElementById('hanzi-input');
-  if (input) {
-    input.addEventListener('input', (e) => {
-      const value = e.target.value;
+  // Escucha cambios en el input
+  const hanziInput = document.getElementById('hanzi-input');
+  if (hanziInput) {
+    hanziInput.addEventListener('input', (e) => {
+      const value = e.target.value.replace(/\s/g, ''); // Elimina espacios
       generateHanziSquares(value);
     });
   }
 
-  const animateButton = document.getElementById('animate-all');
-  if (animateButton) {
-    animateButton.addEventListener('click', () => {
+  // Escucha el clic del botón de animar
+  const animateAllButton = document.getElementById('animate-all');
+  if (animateAllButton) {
+    animateAllButton.addEventListener('click', () => {
       hanziWriters.forEach(writer => writer.animateCharacter());
     });
   }
-});
+
+  // Lógica para el botón de descarga del PDF
+  const downloadPdfButton = document.getElementById('download-pdf');
+  if (downloadPdfButton) {
+    downloadPdfButton.addEventListener('click', () => {
+      alert('La funcionalidad para descargar el PDF está en desarrollo. ¡Pronto estará disponible!');
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
