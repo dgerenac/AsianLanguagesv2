@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Definimos los elementos del DOM
     const hanziInput = document.getElementById('hanzi-input');
     const tianZiGeGrid = document.getElementById('tian-zi-ge-grid');
     const animateAllButton = document.getElementById('animate-all');
@@ -12,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizPlaceholder = document.getElementById('quiz-placeholder');
     
     const radicalColor = '#168F16'; 
-    const customStrokeWidth = 3; // <-- Hemos definido un ancho de trazo más delgado
+    const customStrokeWidth = 3; 
 
     let writers = [];
     let quizWriters = [];
@@ -44,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 strokeAnimationSpeed: 1,
                 delayBetweenStrokes: 100,
                 radicalColor: radicalColor,
-                strokeWidth: customStrokeWidth // <-- Usamos el ancho de trazo personalizado aquí
+                strokeWidth: customStrokeWidth
             });
             squareContainer.addEventListener('click', () => writer.animateCharacter());
             writers.push(writer);
@@ -90,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Event listeners
     hanziInput.addEventListener('input', (event) => {
         const hanziText = event.target.value.replace(/\s/g, '');
         generateHanziSquares(hanziText);
@@ -152,5 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     generateHanziSquares('你好');
+
+    quizInput.value = '中文';
     startQuiz();
 });

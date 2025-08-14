@@ -1,4 +1,4 @@
-/* Variables */
+
 $color-primario: #1d1d1d;
 $color-secundario: #f8f9fa;
 $color-texto-principal: #212529;
@@ -7,7 +7,7 @@ $color-resaltado: #ffc107; // Amarillo de Bootstrap
 
 $breakpoint-mobile: 768px;
 
-/* GENERAL RESET */
+
 * {
   margin: 0;
   padding: 0;
@@ -20,7 +20,7 @@ body {
   color: $color-texto-principal;
 }
 
-/* HEADER */
+
 header {
   background-color: $color-primario;
   padding: 1rem 0;
@@ -46,7 +46,7 @@ header {
   }
 }
 
-/* MAIN SECTIONS */
+
 section {
   background-color: white;
   border-radius: 12px;
@@ -73,28 +73,13 @@ p.romanization {
   text-align: center;
 }
 
-/* OBJECTIVES LIST */
-.list-group-item {
-  font-size: 1rem;
-  border: none;
-  padding: 0.75rem 1.25rem;
-}
 
-/* EXPLANATION TEXT */
+
 .explanation-text {
   font-size: 1rem;
   color: #444;
 }
 
-/* IMAGE / CHART SECTION */
-.resources-section img {
-  max-width: 100%;
-  height: auto;
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-}
-
-/* FOOTER */
 footer {
   background-color: $color-primario;
   color: white;
@@ -110,7 +95,6 @@ footer {
   }
 }
 
-/* LANGUAGE STYLES */
 .hanzi {
   color: #d63384;
 }
@@ -138,7 +122,7 @@ footer {
   color: #28a745;
 }
 
-/* MEDIA QUERIES */
+
 @media (max-width: $breakpoint-mobile) {
   header h1 {
     font-size: 1.25rem;
@@ -169,9 +153,9 @@ footer {
   }
 }
 
-/* Estilo para los cuadros de escritura de Hanzi */
+
 .tian-zi-ge-square {
-  position: relative; // Esto es crucial para posicionar el fondo correctamente
+  position: relative; 
   width: 100px;
   height: 100px;
   border: 1px solid #ddd;
@@ -185,10 +169,10 @@ footer {
     width: 100%;
     height: 100%;
     
-    // Aquí está el SVG como fondo
+    
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><line x1="0" y1="0" x2="100" y2="100" stroke="%23DDD" /><line x1="100" y1="0" x2="0" y2="100" stroke="%23DDD" /><line x1="50" y1="0" x2="50" y2="100" stroke="%23DDD" /><line x1="0" y1="50" x2="100" y2="50" stroke="%23DDD" /></svg>');
     background-size: contain;
     z-index: 0;
-    opacity: 0.5; // Opcional: Reduce la opacidad para que no interfiera con el trazo
+    opacity: 0.5; 
   }
 }

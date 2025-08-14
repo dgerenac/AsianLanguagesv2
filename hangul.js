@@ -5,15 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadPdfButton = document.getElementById('download-pdf');
     const placeholderMessage = document.getElementById('placeholder-message');
 
-    const canvases = []; // Almacenará las instancias de canvas
+    const canvases = []; 
 
-    /**
-     * Genera los cuadros interactivos para cada carácter de Hangul.
-     * @param {string} characters Los caracteres a generar.
-     */
     const generateHangulSquares = (text) => {
-        hangulWritingGrid.innerHTML = ''; // Limpia la cuadrícula actual
-        canvases.length = 0; // Limpia el array de canvases
+        hangulWritingGrid.innerHTML = ''; 
+        canvases.length = 0; 
 
         if (text.trim().length === 0) {
             placeholderMessage.style.display = 'block';
@@ -22,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholderMessage.style.display = 'none';
         }
 
-        // Dividir el texto por espacios para obtener frases
         const phrases = text.trim().split(' ');
 
         phrases.forEach((phrase, phraseIndex) => {
@@ -54,25 +49,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     charDisplay.style.top = '50%';
                     charDisplay.style.left = '50%';
                     charDisplay.style.transform = 'translate(-50%, -50%)';
-                    charDisplay.style.pointerEvents = 'none'; // Para que no bloquee el canvas
+                    charDisplay.style.pointerEvents = 'none'; 
                     squareContainer.appendChild(charDisplay);
 
                     phraseContainer.appendChild(squareContainer);
                     canvases.push(canvas);
 
-                    // Lógica para dibujar en el canvas
                     let isDrawing = false;
                     const ctx = canvas.getContext('2d');
-                    ctx.strokeStyle = '#333';
-                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#9dbbbbff';
+                    ctx.lineWidth = 1;
                     ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(50, 0);
+                    ctx.lineTo(50, 100);
+                    ctx.moveTo(0, 50);
+                    ctx.lineTo(100, 50);
+                    ctx.stroke();
 
-                    // Lógica para dibujar el carácter al hacer clic
+
+                   
                     squareContainer.addEventListener('click', () => {
-                        // Limpiamos el canvas antes de dibujar el nuevo carácter
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        
-                        // Generamos el patrón de Hangul y lo dibujamos en el canvas
                         ctx.fillStyle = '#333';
                         ctx.font = '72px Arial';
                         ctx.textAlign = 'center';
@@ -80,10 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         ctx.fillText(char, canvas.width / 2, canvas.height / 2);
                     });
 
-                    // Lógica para dibujar con el mouse/táctil
                     const startDrawing = (e) => {
                         isDrawing = true;
-                        charDisplay.style.color = 'transparent'; // Oculta el carácter gris al empezar a dibujar
+                        charDisplay.style.color = 'transparent';
                         const pos = getMousePos(canvas, e);
                         ctx.beginPath();
                         ctx.moveTo(pos.x, pos.y);
@@ -145,13 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Escucha cambios en el input del usuario
     hangulInput.addEventListener('input', (event) => {
         const hangulText = event.target.value;
         generateHangulSquares(hangulText);
     });
     
-    // Botón para borrar todos los canvas
     clearAllButton.addEventListener('click', () => {
         canvases.forEach(canvas => {
             const ctx = canvas.getContext('2d');
@@ -159,11 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Lógica para el botón de descarga de PDF (Placeholder por ahora)
     downloadPdfButton.addEventListener('click', () => {
         alert('La funcionalidad para descargar el PDF está en desarrollo. ¡Pronto estará disponible!');
     });
 
-    // Generar la palabra "annyeong" por defecto al cargar la página
     generateHangulSquares('안녕!');
 });
