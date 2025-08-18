@@ -1,0 +1,24 @@
+header {
+  background-color: $color-primario;
+  padding: 1rem 0;
+
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .site-title-wrapper span {
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-left: 0.25rem;
+  }
+
+  .nav .nav-link {
+    color: $color-texto-claro;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $color-resaltado;
+    }
+  }
+}

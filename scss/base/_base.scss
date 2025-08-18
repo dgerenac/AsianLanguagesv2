@@ -1,0 +1,44 @@
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: $color-secundario;
+  color: $color-texto-principal;
+}
+
+section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+h2.display-4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+p.lead {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+p.romanization {
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.explanation-text {
+  font-size: 1rem;
+  color: #444;
+}

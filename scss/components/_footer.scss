@@ -1,0 +1,31 @@
+footer {
+  background-color: $color-primario;
+  color: white;
+
+  .footer-social-icon {
+    filter: grayscale(100%);
+    transition: filter 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+      filter: grayscale(0%);
+      transform: scale(1.1);
+    }
+  }
+}
+
+footer {
+  background-color: $color-primario;
+  color: white;
+
+  .footer-social-icon {
+    width: 30px;
+    height: 30px;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+      filter: grayscale(0%);
+      transform: scale(1.1);
+    }
+  }
+}

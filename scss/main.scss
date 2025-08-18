@@ -1,0 +1,23 @@
+
+@import 'abstracts/variables';
+@import 'abstracts/mixins'; 
+
+@import 'base/base';
+
+
+@import 'components/header';
+@import 'components/footer';
+@import 'components/cards';
+@import 'components/language-styles';
+@import 'components/writing-grid';
+@import 'components/social-media';
+
+
+@media (max-width: $breakpoint-mobile) {
+  header h1 {
+    font-size: 1.25rem;
+  }
+  .display-4 {
+    font-size: 1rem;
+  }
+}
