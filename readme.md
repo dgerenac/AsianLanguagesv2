@@ -27,27 +27,46 @@ This is an educational and interactive web application designed to help you prac
 
 ## 📂 Project Structure
 ```
-ProjectName/
-├── public/
-│   ├── index.html
-│   ├── about.html
-│   ├── learn-language-a.html
-│   ├── learn-language-b.html
-│   ├── css/
-│   │   └── style.css
-│   ├── js/
-│   │   ├── main.js
-│   │   ├── language-a-module.js
-│   │   └── language-b-module.js
-│   └── assets/
-│       ├── images/
-│       │   ├── logo.svg
-│       │   └── social-icon.png
-│       └── fonts/
+## 📂 Estructura del Proyecto
+
+```
+AsianLanguagesv2/
+├── scss/
+│   ├── base/
+│   │   ├── _reset.scss
+│   │   └── _typography.scss
+│   ├── components/
+│   │   ├── _buttons.scss
+│   │   ├── _cards.scss
+│   │   ├── _footer.scss
+│   │   └── _header.scss
+│   ├── layout/
+│   │   └── _grid.scss
+│   ├── pages/
+│   │   └── _home.scss
+│   ├── utils/
+│   │   └── _variables.scss
+│   └── style.scss
+├── css/
+│   └── style.css
+├── js/
+│   ├── hangul.js
+│   ├── index.js
+│   └── japanese.js
+├── assets/
+│   └── images/
+│       └── Imgs/
+│           ├── Xicon.png
+│           ├── discordicon.png
+│           ├── fbicon.png
+│           └── liicon.png
 ├── .gitignore
-├── package.json (if applicable)
 ├── README.md
-└── LICENSE (if applicable)
+├── aboutus.html
+├── hangul.html
+├── hanzi.html
+├── index.html
+└── japanese.html
 ```
 
 ---
