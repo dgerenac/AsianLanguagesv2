@@ -1,186 +1,113 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
+    // --- ELEMENTOS DEL DOM ---
     const hangulInput = document.getElementById('hangul-input');
-    const hangulWritingGrid = document.getElementById('hangul-writing-grid');
-    const clearAllButton = document.getElementById('clear-all');
-    const downloadPdfButton = document.getElementById('download-pdf');
-    const placeholderMessage = document.getElementById('placeholder-message');
+    const writingGrid = document.getElementById('hangul-writing-grid');
+    const placeholder = document.getElementById('placeholder-message');
+    const clearButton = document.getElementById('clear-all');
+    const downloadButton = document.getElementById('download-pdf');
+    const currentYearSpan = document.getElementById('current-year');
 
-    const canvases = [];
+    // --- LÓGICA PRINCIPAL ---
 
-    const generateHangulSquares = (text) => {
-        hangulWritingGrid.innerHTML = '';
-        canvases.length = 0;
+    // 1. Actualizar el año en el footer
+    if (currentYearSpan) {
+        currentYearSpan.textContent = new Date().getFullYear();
+    }
 
-        if (text.trim().length === 0) {
-            placeholderMessage.style.display = 'block';
+    // 2. Función para actualizar la cuadrícula en la PANTALLA
+    const updateGrid = () => {
+        const text = hangulInput.value.trim();
+        writingGrid.innerHTML = ''; // Limpiamos la cuadrícula
+
+        if (text.length === 0) {
+            writingGrid.appendChild(placeholder); // Mostramos el mensaje inicial si no hay texto
             return;
-        } else {
-            placeholderMessage.style.display = 'none';
         }
 
-        const phrases = text.trim().split(' ');
-
-        phrases.forEach((phrase, phraseIndex) => {
-            if (phrase.length > 0) {
-                const phraseContainer = document.createElement('div');
-                phraseContainer.classList.add('d-flex', 'flex-wrap');
-
-                for (const char of phrase) {
-                    const squareContainer = document.createElement('div');
-                    squareContainer.classList.add('hangul-square-container', 'border', 'border-secondary', 'm-1', 'p-0');
-                    squareContainer.style.width = '100px';
-                    squareContainer.style.height = '100px';
-                    squareContainer.style.position = 'relative';
-
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 100;
-                    canvas.height = 100;
-                    canvas.style.position = 'absolute';
-                    canvas.style.top = '0';
-                    canvas.style.left = '0';
-                    squareContainer.appendChild(canvas);
-                    
-                    const charDisplay = document.createElement('div');
-                    charDisplay.textContent = char;
-                    charDisplay.style.fontSize = '3em';
-                    charDisplay.style.textAlign = 'center';
-                    charDisplay.style.color = '#ccc';
-                    charDisplay.style.position = 'absolute';
-                    charDisplay.style.top = '50%';
-                    charDisplay.style.left = '50%';
-                    charDisplay.style.transform = 'translate(-50%, -50%)';
-                    charDisplay.style.pointerEvents = 'none'; 
-                    squareContainer.appendChild(charDisplay);
-
-                    phraseContainer.appendChild(squareContainer);
-                    canvases.push(canvas);
-
-                    let isDrawing = false;
-                    const ctx = canvas.getContext('2d');
-                    ctx.strokeStyle = '#333';
-                    ctx.lineWidth = 3;
-                    ctx.lineCap = 'round';
-
-                    squareContainer.addEventListener('click', () => {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.fillStyle = '#333';
-                        ctx.font = '72px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(char, canvas.width / 2, canvas.height / 2);
-                    });
-
-                    const startDrawing = (e) => {
-                        isDrawing = true;
-                        charDisplay.style.color = 'transparent';
-                        const pos = getMousePos(canvas, e);
-                        ctx.beginPath();
-                        ctx.moveTo(pos.x, pos.y);
-                    };
-
-                    const draw = (e) => {
-                        if (!isDrawing) return;
-                        const pos = getMousePos(canvas, e);
-                        ctx.lineTo(pos.x, pos.y);
-                        ctx.stroke();
-                    };
-
-                    const stopDrawing = () => {
-                        isDrawing = false;
-                        ctx.closePath();
-                    };
-
-                    const getMousePos = (canvas, event) => {
-                        const rect = canvas.getBoundingClientRect();
-                        let clientX, clientY;
-
-                        if (event.touches) {
-                            clientX = event.touches[0].clientX;
-                            clientY = event.touches[0].clientY;
-                        } else {
-                            clientX = event.clientX;
-                            clientY = event.clientY;
-                        }
-
-                        return {
-                            x: clientX - rect.left,
-                            y: clientY - rect.top
-                        };
-                    };
-                    
-                    canvas.addEventListener('mousedown', startDrawing);
-                    canvas.addEventListener('mousemove', draw);
-                    canvas.addEventListener('mouseup', stopDrawing);
-                    canvas.addEventListener('mouseout', stopDrawing);
-
-                    canvas.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        startDrawing(e);
-                    });
-                    canvas.addEventListener('touchmove', (e) => {
-                        e.preventDefault();
-                        draw(e);
-                    });
-                    canvas.addEventListener('touchend', stopDrawing);
-                }
-                hangulWritingGrid.appendChild(phraseContainer);
-
-                if (phraseIndex < phrases.length - 1) {
-                    const separator = document.createElement('div');
-                    separator.classList.add('p-2');
-                    hangulWritingGrid.appendChild(separator);
-                }
+        // Creamos una caja para cada caracter en la pantalla
+        text.split('').forEach(char => {
+            if (char.trim() !== '') {
+                const cell = document.createElement('div');
+                cell.className = 'hangul-cell p-2 border m-1 d-flex justify-content-center align-items-center';
+                cell.style.width = '80px';
+                cell.style.height = '80px';
+                cell.style.fontSize = '2.5rem';
+                cell.textContent = char;
+                writingGrid.appendChild(cell);
             }
         });
     };
 
-    hangulInput.addEventListener('input', (event) => {
-        const hangulText = event.target.value;
-        generateHangulSquares(hangulText);
-    });
-    
-    clearAllButton.addEventListener('click', () => {
-        canvases.forEach(canvas => {
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        });
-    });
-
-    downloadPdfButton.addEventListener('click', async () => {
-        try {
-            const gridElement = document.getElementById('hangul-writing-grid');
-            if (!gridElement) return;
-
-            const canvas = await html2canvas(gridElement, {
-                backgroundColor: "#ffffff"
-            });
-
-            const imgData = canvas.toDataURL("image/png");
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF("p", "mm", "a4");
-
-            const pageWidth = pdf.internal.pageSize.getWidth();
-
-            const today = new Date().toLocaleDateString("es-ES");
-            pdf.setFont("helvetica", "bold");
-            pdf.setFontSize(16);
-            pdf.text("Hangul Worksheet", pageWidth / 2, 15, { align: "center" });
-
-            pdf.setFont("helvetica", "normal");
-            pdf.setFontSize(12);
-            pdf.text(`Fecha: ${today}`, pageWidth / 2, 23, { align: "center" });
-
-            const imgWidth = pageWidth - 20;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            pdf.addImage(imgData, "PNG", 10, 30, imgWidth, imgHeight);
-
-            pdf.save("hangul-worksheet.pdf");
-        } catch (error) {
-            console.error("Error generando PDF:", error);
-            alert("Hubo un error al generar el PDF.");
+    // 3. Función para generar y descargar el PDF (¡LA NUEVA LÓGICA!)
+    const generatePdf = () => {
+        const text = hangulInput.value.trim();
+        if (text.length === 0) {
+            alert('Por favor, escribe algunos caracteres Hangul primero.');
+            return;
         }
-    });
 
-    generateHangulSquares('안녕!');
+        // Inicializamos jsPDF en orientación vertical (portrait), unidades en mm, y tamaño A4.
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+
+        // --- AÑADIMOS CONTENIDO AL PDF ---
+
+        // Título del documento
+        doc.setFontSize(22);
+        doc.text('Hoja de Práctica de Hangul (한글)', 105, 20, { align: 'center' });
+
+        // Instrucciones
+        doc.setFontSize(12);
+        doc.text('Usa los espacios para practicar la escritura de cada caracter.', 105, 30, { align: 'center' });
+
+        // --- DIBUJAMOS LA CUADRÍCULA DE PRÁCTICA ---
+        const chars = text.split('');
+        const boxSize = 20; // Tamaño de cada caja en mm
+        const margin = 15; // Margen de la página
+        const page_width = doc.internal.pageSize.getWidth();
+        let x = margin;
+        let y = 50; // Posición Y inicial, debajo del título
+
+        chars.forEach(char => {
+            if (char.trim() === '') return; // Omitir espacios
+
+            // Si nos salimos de la página, saltamos a la siguiente línea
+            if (x + boxSize > page_width - margin) {
+                x = margin;
+                y += boxSize;
+            }
+            
+            // Si nos salimos por abajo, creamos una nueva página
+            if (y + boxSize > doc.internal.pageSize.getHeight() - margin) {
+                doc.addPage();
+                y = margin; // Reiniciamos Y en la nueva página
+            }
+
+            // Dibujamos la caja de práctica
+            doc.setDrawColor(180, 180, 180); // Color gris para las líneas
+            doc.rect(x, y, boxSize, boxSize);
+
+            // Escribimos el caracter de ejemplo (más pequeño y en una esquina)
+            doc.setFontSize(14);
+            doc.setTextColor(150, 150, 150);
+            doc.text(char, x + 2, y + 6);
+            
+            // Movemos la coordenada X para la siguiente caja
+            x += boxSize;
+        });
+
+        // Guardamos el archivo PDF
+        doc.save('mi-hoja-de-practica-hangul.pdf');
+    };
+
+    // --- EVENT LISTENERS ---
+    hangulInput.addEventListener('input', updateGrid);
+    clearButton.addEventListener('click', () => {
+        hangulInput.value = '';
+        updateGrid();
+    });
+    downloadButton.addEventListener('click', generatePdf);
+
+    // Llamada inicial para asegurar que el placeholder se muestre
+    updateGrid();
 });
