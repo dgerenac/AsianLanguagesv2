@@ -26,7 +26,7 @@ This is an educational and interactive web application designed to help you prac
 ---
 
 ## 📂 Project Structure
-
+```
 ProjectName/
 ├── public/
 │   ├── index.html
@@ -48,7 +48,7 @@ ProjectName/
 ├── package.json (if applicable)
 ├── README.md
 └── LICENSE (if applicable)
-
+```
 
 ---
 
