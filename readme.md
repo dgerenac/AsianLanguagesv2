@@ -26,7 +26,7 @@ This is an educational and interactive web application designed to help you prac
 ---
 
 ## 📂 Project Structure
-
+'''
 ProjectName/
 ├── public/
 │   ├── index.html
@@ -48,7 +48,7 @@ ProjectName/
 ├── package.json (if applicable)
 ├── README.md
 └── LICENSE (if applicable)
-
+'''
 
 ---
 
@@ -72,4 +72,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ---
 
-© 2024 [Your Name or Organization Name]. All rights reserved.
+© 2025 David Gerena. All rights reserved.
