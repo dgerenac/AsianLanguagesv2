@@ -7,10 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const canvases = []; 
 
-    /**
-     * 
-     * @param {string} text 
-     */
     const generateJapaneseSquares = (text) => {
         japaneseWritingGrid.innerHTML = ''; 
         canvases.length = 0; 
@@ -22,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholderMessage.style.display = 'none';
         }
 
-        
         const phrases = text.trim().split(' ');
 
         phrases.forEach((phrase, phraseIndex) => {
@@ -60,18 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     phraseContainer.appendChild(squareContainer);
                     canvases.push(canvas);
 
-                    
-                    squareContainer.addEventListener('click', () => {
-                        const ctx = canvas.getContext('2d');
-                        ctx.clearRect(0, 0, canvas.width, canvas.height); 
-                        ctx.fillStyle = '#333';
-                        ctx.font = '72px Arial'; 
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(char, canvas.width / 2, canvas.height / 2);
-                    });
-
-                  
                     let isDrawing = false;
                     const ctx = canvas.getContext('2d');
                     ctx.strokeStyle = '#333';
@@ -147,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         generateJapaneseSquares(japaneseText);
     });
     
-   
     clearAllButton.addEventListener('click', () => {
         canvases.forEach(canvas => {
             const ctx = canvas.getContext('2d');
@@ -155,55 +137,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
- 
-    downloadPdfButton.addEventListener('click', async () => {
-        if (canvases.length === 0) {
-            alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
+    downloadPdfButton.addEventListener('click', () => {
+        const text = japaneseInput.value.trim();
+        if (text.length === 0) {
+            alert('Por favor, escribe algunos caracteres japoneses primero.');
             return;
         }
 
-        downloadPdfButton.textContent = 'Generating PDF...';
-        downloadPdfButton.disabled = true;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
 
-        try {
-            const gridContainer = document.getElementById('japanese-writing-grid');
-            const canvas = await html2canvas(gridContainer, { scale: 2 });
-            const imgData = canvas.toDataURL('image/png');
+        doc.setFont('KaiseiDecol', 'normal');
 
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
-                format: 'a4'
-            });
+        doc.setFontSize(22);
+        doc.text('Hoja de Práctica de Japonés', 105, 20, { align: 'center' });
+        doc.setFontSize(12);
+        doc.text('Usa los espacios para practicar la escritura de cada caracter.', 105, 30, { align: 'center' });
 
-            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 10;
+        const chars = text.split('');
+        const boxSize = 25;
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
 
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+        let x = margin;
+        let y = 50;
 
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+        chars.forEach(char => {
+            if (char.trim() === '') return;
+
+            if (x + boxSize > pageWidth - margin) {
+                x = margin;
+                y += boxSize + 10; 
             }
 
-            pdf.save('japanese-worksheet.pdf');
-            alert('PDF generado y descargado correctamente!');
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Hubo un error al generar el PDF. Por favor, revisa la consola para más detalles.');
-        } finally {
-            downloadPdfButton.textContent = 'Download PDF';
-            downloadPdfButton.disabled = false;
-        }
-    });
+            if (y + boxSize > pageHeight - margin) {
+                doc.addPage();
+                y = 50;
+            }
 
+            doc.setDrawColor(0);
+            doc.rect(x, y, boxSize, boxSize);
+
+            doc.setDrawColor(180);
+            doc.line(x, y + boxSize/2, x + boxSize, y + boxSize/2);
+            doc.line(x + boxSize/2, y, x + boxSize/2, y + boxSize);
+            doc.line(x, y, x + boxSize, y + boxSize);
+            doc.line(x + boxSize, y, x, y + boxSize);
+
+            doc.setTextColor(200);
+            doc.setFontSize(18);
+            doc.text(char, x + boxSize/2, y + boxSize/2 + 6, { align: 'center' });
+
+            x += boxSize + 5;
+        });
+
+        doc.save('hoja-practica-japones.pdf');
+    });
 
     generateJapaneseSquares('こんにちは');
 });
