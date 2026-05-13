@@ -1,0 +1,24 @@
+{
+  "name": "Asian Languages preview",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "forwardPorts": [
+    3000,
+    5000,
+    5001
+  ],
+  "portsAttributes": {
+    "3000": {
+      "label": "Static public preview",
+      "onAutoForward": "openPreview"
+    },
+    "5000": {
+      "label": "Firebase Hosting emulator",
+      "onAutoForward": "notify"
+    },
+    "5001": {
+      "label": "Firebase Functions emulator",
+      "onAutoForward": "notify"
+    }
+  },
+  "postAttachCommand": "npm run preview"
+}

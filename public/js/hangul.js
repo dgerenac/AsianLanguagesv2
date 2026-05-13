@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     canvas.style.top = '0';
                     canvas.style.left = '0';
                     squareContainer.appendChild(canvas);
-                    
+
                     const charDisplay = document.createElement('div');
                     charDisplay.textContent = char;
                     charDisplay.style.fontSize = '3em';
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     charDisplay.style.top = '50%';
                     charDisplay.style.left = '50%';
                     charDisplay.style.transform = 'translate(-50%, -50%)';
-                    charDisplay.style.pointerEvents = 'none'; 
+                    charDisplay.style.pointerEvents = 'none';
                     squareContainer.appendChild(charDisplay);
 
                     phraseContainer.appendChild(squareContainer);
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             y: clientY - rect.top
                         };
                     };
-                    
+
                     canvas.addEventListener('mousedown', startDrawing);
                     canvas.addEventListener('mousemove', draw);
                     canvas.addEventListener('mouseup', stopDrawing);
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hangulText = event.target.value;
         generateHangulSquares(hangulText);
     });
-    
+
     clearAllButton.addEventListener('click', () => {
         canvases.forEach(canvas => {
             const ctx = canvas.getContext('2d');
@@ -147,38 +147,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     downloadPdfButton.addEventListener('click', async () => {
+        if (canvases.length === 0) {
+            alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
+            return;
+        }
+
+        downloadPdfButton.textContent = 'Generando PDF...';
+        downloadPdfButton.disabled = true;
+
         try {
-            const gridElement = document.getElementById('hangul-writing-grid');
-            if (!gridElement) return;
-
-            const canvas = await html2canvas(gridElement, {
-                backgroundColor: "#ffffff"
+            await window.AsianLanguagesPdf.downloadElementAsPdf({
+                element: document.getElementById('hangul-writing-grid'),
+                filename: 'hangul-worksheet.pdf',
+                title: 'Hangul Worksheet',
             });
-
-            const imgData = canvas.toDataURL("image/png");
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF("p", "mm", "a4");
-
-            const pageWidth = pdf.internal.pageSize.getWidth();
-
-            const today = new Date().toLocaleDateString("es-ES");
-            pdf.setFont("helvetica", "bold");
-            pdf.setFontSize(16);
-            pdf.text("Hangul Worksheet", pageWidth / 2, 15, { align: "center" });
-
-            pdf.setFont("helvetica", "normal");
-            pdf.setFontSize(12);
-            pdf.text(`Fecha: ${today}`, pageWidth / 2, 23, { align: "center" });
-
-            const imgWidth = pageWidth - 20;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            pdf.addImage(imgData, "PNG", 10, 30, imgWidth, imgHeight);
-
-            pdf.save("hangul-worksheet.pdf");
         } catch (error) {
             console.error("Error generando PDF:", error);
-            alert("Hubo un error al generar el PDF.");
+            alert("Hubo un error al generar el PDF. Revisa la consola para más detalles.");
+        } finally {
+            downloadPdfButton.textContent = 'Download PDF';
+            downloadPdfButton.disabled = false;
         }
     });
 

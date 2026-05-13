@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const startQuizBtn = document.getElementById('start-quiz-btn');
     const quizTarget = document.getElementById('quiz-target');
     const quizPlaceholder = document.getElementById('quiz-placeholder');
-    
-    const radicalColor = '#168F16'; 
-    const customStrokeWidth = 3; 
+
+    const radicalColor = '#168F16';
+    const customStrokeWidth = 3;
+    const maxPreviewCharacters = 60;
 
     let writers = [];
     let quizWriters = [];
@@ -25,18 +26,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (characters.length === 0) {
             placeholderMessage.style.display = 'block';
             return;
-        } else {
-            placeholderMessage.style.display = 'none';
         }
 
-        for (const char of characters) {
+        placeholderMessage.style.display = 'none';
+
+        const previewCharacters = Array.from(characters).slice(0, maxPreviewCharacters);
+        const fragment = document.createDocumentFragment();
+
+        if (characters.length > maxPreviewCharacters) {
+            const previewNotice = document.createElement('div');
+            previewNotice.classList.add('alert', 'alert-info', 'w-100', 'text-center');
+            previewNotice.textContent = `Vista previa limitada a ${maxPreviewCharacters} caracteres para evitar que la página se congele. El PDF usará todo el texto.`;
+            fragment.appendChild(previewNotice);
+        }
+
+        previewCharacters.forEach((char, index) => {
             const squareContainer = document.createElement('div');
             squareContainer.classList.add('tian-zi-ge-square', 'border', 'border-secondary', 'm-1');
-            const squareId = `hanzi-square-${char}-${Date.now()}`;
+            const squareId = `hanzi-square-${index}-${char.codePointAt(0)}`;
             squareContainer.id = squareId;
-            tianZiGeGrid.appendChild(squareContainer);
+            fragment.appendChild(squareContainer);
 
-            const writer = HanziWriter.create(squareId, char, {
+            const writer = HanziWriter.create(squareContainer, char, {
                 width: 100,
                 height: 100,
                 padding: 5,
@@ -47,7 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             squareContainer.addEventListener('click', () => writer.animateCharacter());
             writers.push(writer);
-        }
+        });
+
+        tianZiGeGrid.appendChild(fragment);
     };
 
     const startQuiz = () => {
@@ -97,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animateAllButton.addEventListener('click', () => {
         writers.forEach(writer => writer.animateCharacter());
     });
-    
+
     startQuizBtn.addEventListener('click', () => {
       startQuiz();
     });
@@ -107,39 +120,15 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('No hay caracteres para descargar.');
             return;
         }
-        
+
         downloadPdfButton.textContent = 'Generando PDF...';
         downloadPdfButton.disabled = true;
 
         try {
-            const gridContainer = document.getElementById('tian-zi-ge-grid');
-            const canvas = await html2canvas(gridContainer, { scale: 2 });
-            const imgData = canvas.toDataURL('image/png');
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
-                format: 'a4'
+            await window.AsianLanguagesPdf.downloadHanziWorksheetPdf({
+                characters: hanziInput.value.replace(/\s/g, ''),
+                filename: 'hanzi-worksheet.pdf',
             });
-
-            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 10;
-
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-
-            pdf.save('hanzi-worksheet.pdf');
         } catch (error) {
             console.error('Error generando el PDF:', error);
             alert('Hubo un error al generar el PDF. Revisa la consola para más detalles.');

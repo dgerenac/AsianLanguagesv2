@@ -1,4 +1,4 @@
-# 你好! 안녕! やあ! 
+# 你好! 안녕! やあ!
 # 👋 Welcome to the Language Learning Project!
 
 This is an educational and interactive web application designed to help you practice writing characters from different languages. It offers a dynamic way to learn stroke order and sentence formatting, all within a modern and responsive interface. **Specifically, for Hanzi, Kanji, and Hangul, the application will display the stroke order for each character within dedicated input boxes, guiding you through the correct writing sequence.**
@@ -89,3 +89,42 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 ---
 
 © 2025 David Gerena. All rights reserved.
+
+---
+
+## 🧪 Preview branch for PDF download testing
+
+This branch is intended to test worksheet PDF downloads without publishing to `asian-languages.com`.
+
+### GitHub Codespaces / online port preview
+
+1. Open the repository in GitHub Codespaces.
+2. Run:
+   ```bash
+   npm run preview
+   ```
+3. Codespaces will forward port `3000`. Open the forwarded URL and test:
+   * `/hanzi.html`
+   * `/hangul.html`
+   * `/japanese.html`
+4. Type sample characters and click **Download PDF**. The download is generated in the browser, so it does not require deploying the production domain.
+
+### Firebase Hosting emulator preview
+
+If you want to test the Firebase Hosting layout without deploying production, run:
+
+```bash
+npm run emulators:hosting
+```
+
+Then open the forwarded port `5000` in Codespaces. The hosting emulator serves the `public/` folder configured in `firebase.json` and rewrites Hanzi PDF requests to the Firebase Function, so long PDF generation can run in the emulator instead of blocking the browser.
+
+### Static validation
+
+Run this check before testing manually:
+
+```bash
+npm run validate:html
+```
+
+It verifies that Hanzi, Hangul, and Japanese pages load `html2canvas`, `jsPDF`, and the shared PDF helper before each page script.

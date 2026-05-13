@@ -1,11 +1,17 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**",
       "functions/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/generarHanziPDF",
+        "function": "generarHanziPDF"
+      }
     ]
   },
   "functions": [
@@ -13,5 +19,15 @@
       "source": "functions",
       "codebase": "default"
     }
-  ]
+  ],
+  "emulators": {
+    "hosting": {
+      "host": "0.0.0.0",
+      "port": 5000
+    },
+    "functions": {
+      "host": "0.0.0.0",
+      "port": 5001
+    }
+  }
 }
