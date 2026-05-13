@@ -143,13 +143,22 @@
         box.style.backgroundRepeat = 'no-repeat';
         box.style.overflow = 'hidden';
 
-        const target = createElement('div', 'hanzi-practice-target');
-        target.style.width = '100%';
-        target.style.height = '100%';
-        target.style.position = 'relative';
-        target.style.zIndex = '1';
+        const glyph = createElement('span', 'hanzi-practice-glyph', character);
+        glyph.style.position = 'absolute';
+        glyph.style.inset = '0';
+        glyph.style.display = 'flex';
+        glyph.style.alignItems = 'center';
+        glyph.style.justifyContent = 'center';
+        glyph.style.color = '#111111';
+        glyph.style.opacity = '0.18';
+        glyph.style.fontFamily = '"Noto Serif SC", "KaiTi", "STKaiti", "Noto Serif CJK SC", "Noto Sans CJK SC", "Microsoft YaHei", "SimSun", serif';
+        glyph.style.fontSize = '76px';
+        glyph.style.fontWeight = '400';
+        glyph.style.lineHeight = '1';
+        glyph.style.transform = 'translateY(-2px)';
+        glyph.style.zIndex = '1';
 
-        box.appendChild(target);
+        box.appendChild(glyph);
         return box;
     };
 
@@ -217,32 +226,19 @@
         return worksheet;
     };
 
-    const waitForAnimationFrames = () => new Promise((resolve) => {
+    const ensureHanziGuideFont = () => {
+        if (document.querySelector('link[data-asian-languages-hanzi-font]')) return;
+
+        const fontLink = document.createElement('link');
+        fontLink.dataset.asianLanguagesHanziFont = 'true';
+        fontLink.rel = 'stylesheet';
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400&display=swap';
+        document.head.appendChild(fontLink);
+    };
+
+    const waitForPdfLayout = () => new Promise((resolve) => {
         requestAnimationFrame(() => requestAnimationFrame(resolve));
     });
-
-    const renderHanziWritersInWorksheet = async (element) => {
-        if (!window.HanziWriter) return;
-
-        const boxes = Array.from(element.querySelectorAll('.hanzi-practice-box[data-char]'));
-        boxes.forEach((box, index) => {
-            const target = box.querySelector('.hanzi-practice-target');
-            if (!target) return;
-
-            target.id = `pdf-hanzi-${Date.now()}-${index}`;
-            target.innerHTML = '';
-
-            window.HanziWriter.create(target, box.dataset.char, {
-                width: HANZI_BOX_SIZE_PX,
-                height: HANZI_BOX_SIZE_PX,
-                padding: 5,
-                radicalColor: '#168F16',
-                strokeWidth: 3,
-            });
-        });
-
-        await waitForAnimationFrames();
-    };
 
     const withHiddenPrintableElement = async (element, callback) => {
         const host = createElement('div', 'pdf-render-host');
@@ -302,7 +298,8 @@
             });
 
             await withHiddenPrintableElement(worksheet, async (element) => {
-                await renderHanziWritersInWorksheet(element);
+                ensureHanziGuideFont();
+                await waitForPdfLayout();
                 const canvas = await renderElementToCanvas(element);
                 const imgData = canvas.toDataURL('image/png');
                 if (pageIndex > 0) pdf.addPage();

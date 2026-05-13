@@ -44,7 +44,7 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
       <main class="worksheet-grid">
         ${pageCharacters.map((character, characterIndex) => `
           <div class="hanzi-square" data-char="${escapeHtml(character)}">
-            <div id="hanzi-${pageIndex}-${characterIndex}" class="hanzi-target"></div>
+            <span class="hanzi-glyph">${escapeHtml(character)}</span>
           </div>
         `).join("")}
       </main>
@@ -57,7 +57,9 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>汉字书写练习</title>
-  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@2.2.2/dist/hanzi-writer.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: #ffffff; }
@@ -109,10 +111,19 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
       background-size: contain;
       background-repeat: no-repeat;
     }
-    .hanzi-target {
-      width: 100%;
-      height: 100%;
-      position: relative;
+    .hanzi-glyph {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111111;
+      opacity: 0.18;
+      font-family: "Noto Serif SC", "KaiTi", "STKaiti", "Noto Serif CJK SC", "Noto Sans CJK SC", "Microsoft YaHei", "SimSun", serif;
+      font-size: 76px;
+      font-weight: 400;
+      line-height: 1;
+      transform: translateY(-2px);
       z-index: 1;
     }
   </style>
@@ -120,24 +131,7 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
 <body>
   ${pageMarkup}
   <script>
-    window.__HANZI_WORKSHEET_READY__ = false;
-    const renderTargets = Array.from(document.querySelectorAll('.hanzi-square'));
-    renderTargets.forEach((square) => {
-      const target = square.querySelector('.hanzi-target');
-      const character = square.dataset.char;
-      HanziWriter.create(target.id, character, {
-        width: 100,
-        height: 100,
-        padding: 5,
-        radicalColor: '#168F16',
-        strokeWidth: 3,
-      });
-    });
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.__HANZI_WORKSHEET_READY__ = true;
-      });
-    });
+    window.__HANZI_WORKSHEET_READY__ = true;
   </script>
 </body>
 </html>`;
