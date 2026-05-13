@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPdfButton.disabled = true;
 
         try {
-            await window.AsianLanguagesPdf.downloadElementAsPdf({
-                element: document.getElementById('tian-zi-ge-grid'),
+            await window.AsianLanguagesPdf.downloadHanziWorksheetPdf({
+                characters: hanziInput.value.replace(/\s/g, ''),
                 filename: 'hanzi-worksheet.pdf',
             });
         } catch (error) {

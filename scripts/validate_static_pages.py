@@ -61,7 +61,14 @@ def main() -> int:
         Path("docs/js/japanese.js"),
     ]:
         contents = js_path.read_text(encoding="utf-8")
-        if "AsianLanguagesPdf.downloadElementAsPdf" not in contents:
+        uses_pdf_helper = any(
+            helper_name in contents
+            for helper_name in [
+                "AsianLanguagesPdf.downloadElementAsPdf",
+                "AsianLanguagesPdf.downloadHanziWorksheetPdf",
+            ]
+        )
+        if not uses_pdf_helper:
             errors.append(f"{js_path}: does not use shared PDF downloader")
 
     if errors:
