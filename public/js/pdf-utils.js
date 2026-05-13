@@ -96,10 +96,10 @@
     };
 
 
-    const HANZI_BOX_SIZE_PX = 60;
+    const HANZI_BOX_SIZE_PX = 100;
     const HANZI_PAGE_WIDTH_PX = 794;
     const HANZI_PAGE_MIN_HEIGHT_PX = 1123;
-    const HANZI_BOXES_PER_PAGE = 108;
+    const HANZI_BOXES_PER_PAGE = 48;
     const MAX_HANZI_PDF_CHARACTERS = 720;
 
     const isHanziPracticeCharacter = (character) => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(character);
@@ -193,9 +193,9 @@
 
         const grid = createElement('div', 'hanzi-worksheet-grid');
         grid.style.display = 'grid';
-        grid.style.gridTemplateColumns = `repeat(9, ${HANZI_BOX_SIZE_PX}px)`;
+        grid.style.gridTemplateColumns = `repeat(6, ${HANZI_BOX_SIZE_PX}px)`;
         grid.style.gridAutoRows = `${HANZI_BOX_SIZE_PX}px`;
-        grid.style.gap = '18px 14px';
+        grid.style.gap = '16px 14px';
         grid.style.alignContent = 'start';
         grid.style.justifyContent = 'center';
 
@@ -235,9 +235,9 @@
             window.HanziWriter.create(target, box.dataset.char, {
                 width: HANZI_BOX_SIZE_PX,
                 height: HANZI_BOX_SIZE_PX,
-                padding: 3,
+                padding: 5,
                 radicalColor: '#168F16',
-                strokeWidth: 1.8,
+                strokeWidth: 3,
             });
         });
 

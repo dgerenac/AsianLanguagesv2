@@ -2,7 +2,7 @@ const { onRequest } = require("firebase-functions/v2/https");
 const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
 
-const HANZI_BOXES_PER_PAGE = 108;
+const HANZI_BOXES_PER_PAGE = 48;
 const MAX_HANZI_PDF_CHARACTERS = 720;
 
 const normalizeFilename = (filename = "documento") => filename
@@ -90,15 +90,15 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
     .worksheet-location { text-align: right; }
     .worksheet-grid {
       display: grid;
-      grid-template-columns: repeat(9, 16mm);
-      grid-auto-rows: 16mm;
-      gap: 5mm 4mm;
+      grid-template-columns: repeat(6, 100px);
+      grid-auto-rows: 100px;
+      gap: 16px 14px;
       align-content: start;
       justify-content: center;
     }
     .hanzi-square {
-      width: 16mm;
-      height: 16mm;
+      width: 100px;
+      height: 100px;
       position: relative;
       border: 1.1px solid #4f4f4f;
       background: #ffffff;
@@ -126,11 +126,11 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
       const target = square.querySelector('.hanzi-target');
       const character = square.dataset.char;
       HanziWriter.create(target.id, character, {
-        width: 60,
-        height: 60,
-        padding: 3,
+        width: 100,
+        height: 100,
+        padding: 5,
         radicalColor: '#168F16',
-        strokeWidth: 1.8,
+        strokeWidth: 3,
       });
     });
     requestAnimationFrame(() => {
