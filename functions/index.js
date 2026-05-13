@@ -104,22 +104,10 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
       background: #ffffff;
       overflow: hidden;
     }
-    .hanzi-square::before,
-    .hanzi-square::after,
-    .hanzi-target::before,
-    .hanzi-target::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-    .hanzi-square::before {
-      background: linear-gradient(45deg, transparent calc(50% - 0.45px), #7d7d7d calc(50% - 0.45px), #7d7d7d calc(50% + 0.45px), transparent calc(50% + 0.45px));
-      opacity: 0.55;
-    }
-    .hanzi-square::after {
-      background: linear-gradient(-45deg, transparent calc(50% - 0.45px), #7d7d7d calc(50% - 0.45px), #7d7d7d calc(50% + 0.45px), transparent calc(50% + 0.45px));
-      opacity: 0.55;
+    .hanzi-square {
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><line x1="0" y1="0" x2="100" y2="100" stroke="%23DDD" /><line x1="100" y1="0" x2="0" y2="100" stroke="%23DDD" /><line x1="50" y1="0" x2="50" y2="100" stroke="%23DDD" /><line x1="0" y1="50" x2="100" y2="50" stroke="%23DDD" /></svg>');
+      background-size: contain;
+      background-repeat: no-repeat;
     }
     .hanzi-target {
       width: 100%;
@@ -127,17 +115,6 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
       position: relative;
       z-index: 1;
     }
-    .hanzi-target::before {
-      background: linear-gradient(90deg, transparent calc(50% - 0.35px), #8d8d8d calc(50% - 0.35px), #8d8d8d calc(50% + 0.35px), transparent calc(50% + 0.35px));
-      opacity: 0.35;
-      z-index: 2;
-    }
-    .hanzi-target::after {
-      background: linear-gradient(0deg, transparent calc(50% - 0.35px), #8d8d8d calc(50% - 0.35px), #8d8d8d calc(50% + 0.35px), transparent calc(50% + 0.35px));
-      opacity: 0.35;
-      z-index: 2;
-    }
-    .hanzi-target svg { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
@@ -151,13 +128,9 @@ const createHanziWorksheetHtml = ({ characters, date, location }) => {
       HanziWriter.create(target.id, character, {
         width: 60,
         height: 60,
-        padding: 2,
-        showOutline: true,
-        showCharacter: true,
-        strokeColor: '#2b2b2b',
-        radicalColor: '#006b2d',
-        outlineColor: '#9a9a9a',
-        strokeWidth: 2.2,
+        padding: 3,
+        radicalColor: '#168F16',
+        strokeWidth: 1.8,
       });
     });
     requestAnimationFrame(() => {

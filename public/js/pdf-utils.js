@@ -131,45 +131,17 @@
     };
 
     const createHanziPracticeBox = (character) => {
-        const box = createElement('div', 'hanzi-practice-box');
+        const box = createElement('div', 'tian-zi-ge-square border border-secondary hanzi-practice-box');
         box.dataset.char = character;
         box.style.width = `${HANZI_BOX_SIZE_PX}px`;
         box.style.height = `${HANZI_BOX_SIZE_PX}px`;
-        box.style.border = '1.2px solid #4f4f4f';
+        box.style.border = '1px solid #6c757d';
         box.style.position = 'relative';
-        box.style.display = 'inline-flex';
-        box.style.alignItems = 'center';
-        box.style.justifyContent = 'center';
-        box.style.background = '#ffffff';
+        box.style.backgroundColor = '#ffffff';
+        box.style.backgroundImage = 'url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><line x1="0" y1="0" x2="100" y2="100" stroke="%23DDD" /><line x1="100" y1="0" x2="0" y2="100" stroke="%23DDD" /><line x1="50" y1="0" x2="50" y2="100" stroke="%23DDD" /><line x1="0" y1="50" x2="100" y2="50" stroke="%23DDD" /></svg>\')';
+        box.style.backgroundSize = 'contain';
+        box.style.backgroundRepeat = 'no-repeat';
         box.style.overflow = 'hidden';
-
-        const diagonalDown = createElement('span', 'hanzi-practice-line');
-        diagonalDown.style.position = 'absolute';
-        diagonalDown.style.inset = '0';
-        diagonalDown.style.background = 'linear-gradient(45deg, transparent calc(50% - 0.45px), #7d7d7d calc(50% - 0.45px), #7d7d7d calc(50% + 0.45px), transparent calc(50% + 0.45px))';
-        diagonalDown.style.opacity = '0.55';
-        diagonalDown.style.zIndex = '2';
-
-        const diagonalUp = createElement('span', 'hanzi-practice-line');
-        diagonalUp.style.position = 'absolute';
-        diagonalUp.style.inset = '0';
-        diagonalUp.style.background = 'linear-gradient(-45deg, transparent calc(50% - 0.45px), #7d7d7d calc(50% - 0.45px), #7d7d7d calc(50% + 0.45px), transparent calc(50% + 0.45px))';
-        diagonalUp.style.opacity = '0.55';
-        diagonalUp.style.zIndex = '2';
-
-        const vertical = createElement('span', 'hanzi-practice-line');
-        vertical.style.position = 'absolute';
-        vertical.style.inset = '0';
-        vertical.style.background = 'linear-gradient(90deg, transparent calc(50% - 0.35px), #8d8d8d calc(50% - 0.35px), #8d8d8d calc(50% + 0.35px), transparent calc(50% + 0.35px))';
-        vertical.style.opacity = '0.35';
-        vertical.style.zIndex = '3';
-
-        const horizontal = createElement('span', 'hanzi-practice-line');
-        horizontal.style.position = 'absolute';
-        horizontal.style.inset = '0';
-        horizontal.style.background = 'linear-gradient(0deg, transparent calc(50% - 0.35px), #8d8d8d calc(50% - 0.35px), #8d8d8d calc(50% + 0.35px), transparent calc(50% + 0.35px))';
-        horizontal.style.opacity = '0.35';
-        horizontal.style.zIndex = '3';
 
         const target = createElement('div', 'hanzi-practice-target');
         target.style.width = '100%';
@@ -177,17 +149,7 @@
         target.style.position = 'relative';
         target.style.zIndex = '1';
 
-        const glyph = createElement('span', 'hanzi-practice-glyph', character);
-        glyph.style.color = 'rgba(43, 43, 43, 0.22)';
-        glyph.style.fontFamily = '"Noto Serif CJK SC", "Noto Serif CJK", "SimSun", "Songti SC", "KaiTi", serif';
-        glyph.style.fontSize = '44px';
-        glyph.style.fontWeight = '400';
-        glyph.style.lineHeight = '1';
-        glyph.style.position = 'absolute';
-        glyph.style.zIndex = '1';
-        glyph.style.transform = 'translateY(-1px)';
-
-        box.append(target, glyph, diagonalDown, diagonalUp, vertical, horizontal);
+        box.appendChild(target);
         return box;
     };
 
@@ -265,23 +227,17 @@
         const boxes = Array.from(element.querySelectorAll('.hanzi-practice-box[data-char]'));
         boxes.forEach((box, index) => {
             const target = box.querySelector('.hanzi-practice-target');
-            const fallbackGlyph = box.querySelector('.hanzi-practice-glyph');
             if (!target) return;
 
             target.id = `pdf-hanzi-${Date.now()}-${index}`;
             target.innerHTML = '';
-            if (fallbackGlyph) fallbackGlyph.style.display = 'none';
 
             window.HanziWriter.create(target, box.dataset.char, {
                 width: HANZI_BOX_SIZE_PX,
                 height: HANZI_BOX_SIZE_PX,
-                padding: 2,
-                showOutline: true,
-                showCharacter: true,
-                strokeColor: '#2b2b2b',
-                radicalColor: '#006b2d',
-                outlineColor: '#9a9a9a',
-                strokeWidth: 2.2,
+                padding: 3,
+                radicalColor: '#168F16',
+                strokeWidth: 1.8,
             });
         });
 
