@@ -5,15 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadPdfButton = document.getElementById('download-pdf');
     const placeholderMessage = document.getElementById('placeholder-message');
 
-    const canvases = []; 
+    const canvases = [];
 
     /**
-     * 
-     * @param {string} text 
+     *
+     * @param {string} text
      */
     const generateJapaneseSquares = (text) => {
-        japaneseWritingGrid.innerHTML = ''; 
-        canvases.length = 0; 
+        japaneseWritingGrid.innerHTML = '';
+        canvases.length = 0;
 
         if (text.trim().length === 0) {
             placeholderMessage.style.display = 'block';
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholderMessage.style.display = 'none';
         }
 
-        
+
         const phrases = text.trim().split(' ');
 
         phrases.forEach((phrase, phraseIndex) => {
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     canvas.style.top = '0';
                     canvas.style.left = '0';
                     squareContainer.appendChild(canvas);
-                    
+
                     const charDisplay = document.createElement('div');
                     charDisplay.textContent = char;
                     charDisplay.style.fontSize = '3em';
@@ -54,24 +54,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     charDisplay.style.top = '50%';
                     charDisplay.style.left = '50%';
                     charDisplay.style.transform = 'translate(-50%, -50%)';
-                    charDisplay.style.pointerEvents = 'none'; 
+                    charDisplay.style.pointerEvents = 'none';
                     squareContainer.appendChild(charDisplay);
 
                     phraseContainer.appendChild(squareContainer);
                     canvases.push(canvas);
 
-                    
+
                     squareContainer.addEventListener('click', () => {
                         const ctx = canvas.getContext('2d');
-                        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.fillStyle = '#333';
-                        ctx.font = '72px Arial'; 
+                        ctx.font = '72px Arial';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.fillText(char, canvas.width / 2, canvas.height / 2);
                     });
 
-                  
+
                     let isDrawing = false;
                     const ctx = canvas.getContext('2d');
                     ctx.strokeStyle = '#333';
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const startDrawing = (e) => {
                         isDrawing = true;
-                        charDisplay.style.color = 'transparent'; 
+                        charDisplay.style.color = 'transparent';
                         const pos = getMousePos(canvas, e);
                         ctx.beginPath();
                         ctx.moveTo(pos.x, pos.y);
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             y: clientY - rect.top
                         };
                     };
-                    
+
                     canvas.addEventListener('mousedown', startDrawing);
                     canvas.addEventListener('mousemove', draw);
                     canvas.addEventListener('mouseup', stopDrawing);
@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const japaneseText = event.target.value;
         generateJapaneseSquares(japaneseText);
     });
-    
-   
+
+
     clearAllButton.addEventListener('click', () => {
         canvases.forEach(canvas => {
             const ctx = canvas.getContext('2d');
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
- 
+
     downloadPdfButton.addEventListener('click', async () => {
         if (canvases.length === 0) {
             alert('No hay caracteres para descargar. Por favor, escribe algunos en el campo de texto.');
@@ -166,34 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPdfButton.disabled = true;
 
         try {
-            const gridContainer = document.getElementById('japanese-writing-grid');
-            const canvas = await html2canvas(gridContainer, { scale: 2 });
-            const imgData = canvas.toDataURL('image/png');
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
-                format: 'a4'
+            await window.AsianLanguagesPdf.downloadElementAsPdf({
+                element: document.getElementById('japanese-writing-grid'),
+                filename: 'japanese-worksheet.pdf',
             });
-
-            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 10;
-
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-
-            pdf.save('japanese-worksheet.pdf');
             alert('PDF generado y descargado correctamente!');
         } catch (error) {
             console.error('Error generating PDF:', error);
