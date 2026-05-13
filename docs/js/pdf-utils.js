@@ -96,9 +96,11 @@
     };
 
 
-    const HANZI_BOX_SIZE_PX = 58;
+    const HANZI_BOX_SIZE_PX = 60;
     const HANZI_PAGE_WIDTH_PX = 794;
     const HANZI_PAGE_MIN_HEIGHT_PX = 1123;
+    const HANZI_BOXES_PER_PAGE = 108;
+    const MAX_HANZI_PDF_CHARACTERS = 720;
 
     const isHanziPracticeCharacter = (character) => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(character);
 
@@ -109,37 +111,87 @@
         return element;
     };
 
+    const chunkCharacters = (characters, size) => {
+        const chunks = [];
+        for (let index = 0; index < characters.length; index += size) {
+            chunks.push(characters.slice(index, index + size));
+        }
+        return chunks;
+    };
+
+    const downloadBlob = (blob, filename) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+    };
+
     const createHanziPracticeBox = (character) => {
         const box = createElement('div', 'hanzi-practice-box');
+        box.dataset.char = character;
         box.style.width = `${HANZI_BOX_SIZE_PX}px`;
         box.style.height = `${HANZI_BOX_SIZE_PX}px`;
-        box.style.border = '1.5px solid #8a8a8a';
+        box.style.border = '1.2px solid #4f4f4f';
         box.style.position = 'relative';
         box.style.display = 'inline-flex';
         box.style.alignItems = 'center';
         box.style.justifyContent = 'center';
-        box.style.background = [
-            'linear-gradient(45deg, transparent calc(50% - 0.5px), #d5d5d5 calc(50% - 0.5px), #d5d5d5 calc(50% + 0.5px), transparent calc(50% + 0.5px))',
-            'linear-gradient(-45deg, transparent calc(50% - 0.5px), #d5d5d5 calc(50% - 0.5px), #d5d5d5 calc(50% + 0.5px), transparent calc(50% + 0.5px))',
-            'linear-gradient(90deg, transparent calc(50% - 0.5px), #eeeeee calc(50% - 0.5px), #eeeeee calc(50% + 0.5px), transparent calc(50% + 0.5px))',
-            'linear-gradient(0deg, transparent calc(50% - 0.5px), #eeeeee calc(50% - 0.5px), #eeeeee calc(50% + 0.5px), transparent calc(50% + 0.5px))',
-            '#ffffff',
-        ].join(', ');
+        box.style.background = '#ffffff';
+        box.style.overflow = 'hidden';
+
+        const diagonalDown = createElement('span', 'hanzi-practice-line');
+        diagonalDown.style.position = 'absolute';
+        diagonalDown.style.inset = '0';
+        diagonalDown.style.background = 'linear-gradient(45deg, transparent calc(50% - 0.45px), #7d7d7d calc(50% - 0.45px), #7d7d7d calc(50% + 0.45px), transparent calc(50% + 0.45px))';
+        diagonalDown.style.opacity = '0.55';
+        diagonalDown.style.zIndex = '2';
+
+        const diagonalUp = createElement('span', 'hanzi-practice-line');
+        diagonalUp.style.position = 'absolute';
+        diagonalUp.style.inset = '0';
+        diagonalUp.style.background = 'linear-gradient(-45deg, transparent calc(50% - 0.45px), #7d7d7d calc(50% - 0.45px), #7d7d7d calc(50% + 0.45px), transparent calc(50% + 0.45px))';
+        diagonalUp.style.opacity = '0.55';
+        diagonalUp.style.zIndex = '2';
+
+        const vertical = createElement('span', 'hanzi-practice-line');
+        vertical.style.position = 'absolute';
+        vertical.style.inset = '0';
+        vertical.style.background = 'linear-gradient(90deg, transparent calc(50% - 0.35px), #8d8d8d calc(50% - 0.35px), #8d8d8d calc(50% + 0.35px), transparent calc(50% + 0.35px))';
+        vertical.style.opacity = '0.35';
+        vertical.style.zIndex = '3';
+
+        const horizontal = createElement('span', 'hanzi-practice-line');
+        horizontal.style.position = 'absolute';
+        horizontal.style.inset = '0';
+        horizontal.style.background = 'linear-gradient(0deg, transparent calc(50% - 0.35px), #8d8d8d calc(50% - 0.35px), #8d8d8d calc(50% + 0.35px), transparent calc(50% + 0.35px))';
+        horizontal.style.opacity = '0.35';
+        horizontal.style.zIndex = '3';
+
+        const target = createElement('div', 'hanzi-practice-target');
+        target.style.width = '100%';
+        target.style.height = '100%';
+        target.style.position = 'relative';
+        target.style.zIndex = '1';
 
         const glyph = createElement('span', 'hanzi-practice-glyph', character);
-        glyph.style.color = 'rgba(0, 0, 0, 0.16)';
+        glyph.style.color = 'rgba(43, 43, 43, 0.22)';
         glyph.style.fontFamily = '"Noto Serif CJK SC", "Noto Serif CJK", "SimSun", "Songti SC", "KaiTi", serif';
-        glyph.style.fontSize = '42px';
+        glyph.style.fontSize = '44px';
         glyph.style.fontWeight = '400';
         glyph.style.lineHeight = '1';
+        glyph.style.position = 'absolute';
+        glyph.style.zIndex = '1';
         glyph.style.transform = 'translateY(-1px)';
-        box.appendChild(glyph);
 
+        box.append(target, glyph, diagonalDown, diagonalUp, vertical, horizontal);
         return box;
     };
 
-    const createHanziWorksheetTemplate = ({ characters, date, location }) => {
-        const printableCharacters = Array.from(characters).filter((character) => character.trim().length > 0);
+    const createHanziWorksheetPage = ({ characters, date, location }) => {
         const worksheet = createElement('section', 'hanzi-printable-worksheet');
         worksheet.setAttribute('aria-hidden', 'true');
         worksheet.style.width = `${HANZI_PAGE_WIDTH_PX}px`;
@@ -148,16 +200,16 @@
         worksheet.style.color = '#111111';
         worksheet.style.fontFamily = 'Arial, "Microsoft YaHei", "PingFang SC", sans-serif';
         worksheet.style.boxSizing = 'border-box';
-        worksheet.style.padding = '0 48px 48px';
+        worksheet.style.padding = '0 52px 52px';
 
         const header = createElement('header', 'hanzi-worksheet-header');
-        header.style.height = '72px';
+        header.style.height = '84px';
         header.style.display = 'grid';
         header.style.gridTemplateColumns = '1fr auto 1fr';
         header.style.alignItems = 'center';
         header.style.borderBottom = '2px solid #ff2f55';
-        header.style.margin = '0 -48px 26px';
-        header.style.padding = '0 48px';
+        header.style.margin = '0 -52px 30px';
+        header.style.padding = '0 52px';
         header.style.boxSizing = 'border-box';
         header.style.background = '#f7f7f7';
 
@@ -178,14 +230,14 @@
         worksheet.appendChild(header);
 
         const grid = createElement('div', 'hanzi-worksheet-grid');
-        grid.style.display = 'flex';
-        grid.style.flexWrap = 'wrap';
-        grid.style.alignItems = 'center';
-        grid.style.alignContent = 'flex-start';
-        grid.style.columnGap = '14px';
-        grid.style.rowGap = '18px';
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = `repeat(9, ${HANZI_BOX_SIZE_PX}px)`;
+        grid.style.gridAutoRows = `${HANZI_BOX_SIZE_PX}px`;
+        grid.style.gap = '18px 14px';
+        grid.style.alignContent = 'start';
+        grid.style.justifyContent = 'center';
 
-        printableCharacters.forEach((character) => {
+        characters.forEach((character) => {
             if (isHanziPracticeCharacter(character)) {
                 grid.appendChild(createHanziPracticeBox(character));
                 return;
@@ -201,6 +253,39 @@
 
         worksheet.appendChild(grid);
         return worksheet;
+    };
+
+    const waitForAnimationFrames = () => new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+
+    const renderHanziWritersInWorksheet = async (element) => {
+        if (!window.HanziWriter) return;
+
+        const boxes = Array.from(element.querySelectorAll('.hanzi-practice-box[data-char]'));
+        boxes.forEach((box, index) => {
+            const target = box.querySelector('.hanzi-practice-target');
+            const fallbackGlyph = box.querySelector('.hanzi-practice-glyph');
+            if (!target) return;
+
+            target.id = `pdf-hanzi-${Date.now()}-${index}`;
+            target.innerHTML = '';
+            if (fallbackGlyph) fallbackGlyph.style.display = 'none';
+
+            window.HanziWriter.create(target, box.dataset.char, {
+                width: HANZI_BOX_SIZE_PX,
+                height: HANZI_BOX_SIZE_PX,
+                padding: 2,
+                showOutline: true,
+                showCharacter: true,
+                strokeColor: '#2b2b2b',
+                radicalColor: '#006b2d',
+                outlineColor: '#9a9a9a',
+                strokeWidth: 2.2,
+            });
+        });
+
+        await waitForAnimationFrames();
     };
 
     const withHiddenPrintableElement = async (element, callback) => {
@@ -220,24 +305,89 @@
         }
     };
 
+    const tryDownloadHanziWorksheetFromFirebase = async ({ characters, filename, date, location }) => {
+        const response = await fetch('/generarHanziPDF', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                characters,
+                filename: filename.replace(/\.pdf$/i, ''),
+                date,
+                location,
+            }),
+        });
+
+        const contentType = response.headers.get('content-type') || '';
+        if (!response.ok || !contentType.includes('application/pdf')) {
+            const errorMessage = await response.text().catch(() => 'No se pudo generar el PDF en Firebase.');
+            throw new Error(errorMessage || 'No se pudo generar el PDF en Firebase.');
+        }
+
+        const pdfBlob = await response.blob();
+        downloadBlob(pdfBlob, filename);
+    };
+
+    const downloadHanziWorksheetLocally = async ({ characters, filename, date, location }) => {
+        const pages = chunkCharacters(characters, HANZI_BOXES_PER_PAGE);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'p',
+            unit: 'mm',
+            format: 'a4',
+        });
+
+        for (let pageIndex = 0; pageIndex < pages.length; pageIndex += 1) {
+            const worksheet = createHanziWorksheetPage({
+                characters: pages[pageIndex],
+                date,
+                location,
+            });
+
+            await withHiddenPrintableElement(worksheet, async (element) => {
+                await renderHanziWritersInWorksheet(element);
+                const canvas = await renderElementToCanvas(element);
+                const imgData = canvas.toDataURL('image/png');
+                if (pageIndex > 0) pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+            });
+        }
+
+        pdf.save(filename);
+    };
+
     const downloadHanziWorksheetPdf = async ({ characters, filename = 'hanzi-worksheet.pdf', date, location }) => {
-        if (!characters || Array.from(characters.replace(/\s/g, '')).length === 0) {
+        ensurePdfDependencies();
+
+        const printableCharacters = Array.from((characters || '').replace(/\s/g, ''));
+        if (printableCharacters.length === 0) {
             throw new Error('No hay caracteres Hanzi para generar el PDF.');
         }
 
-        const formattedDate = date || new Date().toLocaleDateString('es-ES');
-        const worksheet = createHanziWorksheetTemplate({
-            characters,
-            date: formattedDate,
-            location,
-        });
+        if (printableCharacters.length > MAX_HANZI_PDF_CHARACTERS) {
+            throw new Error(`Por ahora el PDF permite máximo ${MAX_HANZI_PDF_CHARACTERS} caracteres para evitar archivos demasiado pesados.`);
+        }
 
-        await withHiddenPrintableElement(worksheet, async (element) => {
-            await downloadElementAsPdf({
-                element,
+        const formattedDate = date || new Date().toLocaleDateString('es-ES');
+        const charactersText = printableCharacters.join('');
+
+        try {
+            await tryDownloadHanziWorksheetFromFirebase({
+                characters: charactersText,
                 filename,
+                date: formattedDate,
+                location,
             });
-        });
+        } catch (firebaseError) {
+            console.warn('Firebase PDF generation unavailable; using browser fallback.', firebaseError);
+            await downloadHanziWorksheetLocally({
+                characters: printableCharacters,
+                filename,
+                date: formattedDate,
+                location,
+            });
+        }
     };
 
     window.AsianLanguagesPdf = {

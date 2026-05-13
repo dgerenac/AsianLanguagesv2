@@ -117,7 +117,7 @@ If you want to test the Firebase Hosting layout without deploying production, ru
 npm run emulators:hosting
 ```
 
-Then open the forwarded port `5000` in Codespaces. The hosting emulator serves the `public/` folder configured in `firebase.json`.
+Then open the forwarded port `5000` in Codespaces. The hosting emulator serves the `public/` folder configured in `firebase.json` and rewrites Hanzi PDF requests to the Firebase Function, so long PDF generation can run in the emulator instead of blocking the browser.
 
 ### Static validation
 

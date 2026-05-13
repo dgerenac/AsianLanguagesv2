@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const radicalColor = '#168F16';
     const customStrokeWidth = 3;
+    const maxPreviewCharacters = 60;
 
     let writers = [];
     let quizWriters = [];
@@ -25,18 +26,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (characters.length === 0) {
             placeholderMessage.style.display = 'block';
             return;
-        } else {
-            placeholderMessage.style.display = 'none';
         }
 
-        for (const char of characters) {
+        placeholderMessage.style.display = 'none';
+
+        const previewCharacters = Array.from(characters).slice(0, maxPreviewCharacters);
+        const fragment = document.createDocumentFragment();
+
+        if (characters.length > maxPreviewCharacters) {
+            const previewNotice = document.createElement('div');
+            previewNotice.classList.add('alert', 'alert-info', 'w-100', 'text-center');
+            previewNotice.textContent = `Vista previa limitada a ${maxPreviewCharacters} caracteres para evitar que la página se congele. El PDF usará todo el texto.`;
+            fragment.appendChild(previewNotice);
+        }
+
+        previewCharacters.forEach((char, index) => {
             const squareContainer = document.createElement('div');
             squareContainer.classList.add('tian-zi-ge-square', 'border', 'border-secondary', 'm-1');
-            const squareId = `hanzi-square-${char}-${Date.now()}`;
+            const squareId = `hanzi-square-${index}-${char.codePointAt(0)}`;
             squareContainer.id = squareId;
-            tianZiGeGrid.appendChild(squareContainer);
+            fragment.appendChild(squareContainer);
 
-            const writer = HanziWriter.create(squareId, char, {
+            const writer = HanziWriter.create(squareContainer, char, {
                 width: 100,
                 height: 100,
                 padding: 5,
@@ -47,7 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             squareContainer.addEventListener('click', () => writer.animateCharacter());
             writers.push(writer);
-        }
+        });
+
+        tianZiGeGrid.appendChild(fragment);
     };
 
     const startQuiz = () => {
