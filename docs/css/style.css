@@ -4,10 +4,21 @@
   box-sizing: border-box;
 }
 
+html, body {
+  min-height: 100%;
+}
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8f9fa;
   color: #212529;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 header {
@@ -150,3 +161,19 @@ footer .footer-social-icon:hover {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+.reviews-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.reviews-section .card-title {
+  font-size: 1.85rem;
+  font-weight: 600;
+}
+
+.reviews-section label,
+.reviews-section .btn,
+.reviews-section .text-muted {
+  font-size: 1.1rem;
+}

@@ -25,7 +25,7 @@
                     userId = userCredential.user.uid;
                 }
             } catch (error) {
-                console.error("Error de autenticación:", error);
+                console.error("Authentication error:", error);
             }
         }
 
@@ -33,7 +33,7 @@
         async function setupApp() {
             await authenticate();
             if (!userId) {
-                console.error("Autenticación fallida. No se puede acceder a la base de datos.");
+                console.error("Authentication failed. Unable to access the database.");
                 return;
             }
 
@@ -55,8 +55,8 @@
                     });
                     reviewForm.reset();
                 } catch (error) {
-                    console.error("Error al añadir la reseña:", error);
-                    alert("Error al publicar la reseña. Inténtalo de nuevo más tarde.");
+                    console.error("Error adding review:", error);
+                    alert("Error posting review. Please try again later.");
                 }
             });
         }

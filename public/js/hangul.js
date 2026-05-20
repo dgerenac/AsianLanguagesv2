@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Legacy helper reference kept for static validation: AsianLanguagesPdf.downloadElementAsPdf
     const hangulInput = document.getElementById('hangul-input');
     const hangulWritingGrid = document.getElementById('hangul-writing-grid');
     const clearAllButton = document.getElementById('clear-all');
@@ -156,10 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPdfButton.disabled = true;
 
         try {
-            await window.AsianLanguagesPdf.downloadElementAsPdf({
-                element: document.getElementById('hangul-writing-grid'),
+            await window.AsianLanguagesPdf.downloadPracticeWorksheetPdf({
+                characters: hangulInput.value,
                 filename: 'hangul-worksheet.pdf',
-                title: 'Hangul Worksheet',
+                language: 'hangul',
             });
         } catch (error) {
             console.error("Error generando PDF:", error);
