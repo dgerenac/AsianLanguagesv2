@@ -96,7 +96,7 @@
     };
 
 
-    const HANZI_BOX_SIZE_PX = 100;
+    const HANZI_BOX_SIZE_PX = 88;
     const HANZI_PAGE_WIDTH_PX = 794;
     const HANZI_PAGE_MIN_HEIGHT_PX = 1123;
     const HANZI_BOXES_PER_PAGE = 48;
@@ -152,7 +152,7 @@
         glyph.style.color = '#111111';
         glyph.style.opacity = '0.18';
         glyph.style.fontFamily = '"Noto Serif SC", "KaiTi", "STKaiti", "Noto Serif CJK SC", "Noto Sans CJK SC", "Microsoft YaHei", "SimSun", serif';
-        glyph.style.fontSize = '76px';
+        glyph.style.fontSize = '66px';
         glyph.style.fontWeight = '400';
         glyph.style.lineHeight = '1';
         glyph.style.transform = 'translateY(-2px)';
@@ -178,7 +178,7 @@
         header.style.display = 'grid';
         header.style.gridTemplateColumns = '1fr auto 1fr';
         header.style.alignItems = 'center';
-        header.style.borderBottom = '2px solid #ff2f55';
+        header.style.borderBottom = `2px solid ${config.lineColor || '#ff2f55'}`;
         header.style.margin = '0 -52px 30px';
         header.style.padding = '0 52px';
         header.style.boxSizing = 'border-box';
@@ -343,8 +343,116 @@
         }
     };
 
+
+
+    const LANGUAGE_WORKSHEET_CONFIG = {
+        hangul: {
+            title: '한글 쓰기 연습',
+            dateLabel: 'Date',
+            locationLabel: 'Location',
+            lineColor: '#0d6efd',
+            fontFamily: '"Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif',
+        },
+        japanese: {
+            title: '日本語書き取り練習',
+            dateLabel: 'Date',
+            locationLabel: 'Location',
+            lineColor: '#20c997',
+            fontFamily: '"Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif',
+        },
+    };
+
+    const createPracticeWorksheetPage = ({ characters, language, date, location }) => {
+        const config = LANGUAGE_WORKSHEET_CONFIG[language];
+        if (!config) throw new Error(`Unsupported worksheet language: ${language}`);
+
+        const worksheet = createElement('section', `${language}-printable-worksheet`);
+        worksheet.setAttribute('aria-hidden', 'true');
+        worksheet.style.width = `${HANZI_PAGE_WIDTH_PX}px`;
+        worksheet.style.minHeight = `${HANZI_PAGE_MIN_HEIGHT_PX}px`;
+        worksheet.style.background = '#ffffff';
+        worksheet.style.color = '#111111';
+        worksheet.style.fontFamily = config.fontFamily;
+        worksheet.style.boxSizing = 'border-box';
+        worksheet.style.padding = '0 52px 52px';
+
+        const header = createElement('header', `${language}-worksheet-header`);
+        header.style.height = '84px';
+        header.style.display = 'grid';
+        header.style.gridTemplateColumns = '1fr auto 1fr';
+        header.style.alignItems = 'center';
+        header.style.borderBottom = `2px solid ${config.lineColor || '#ff2f55'}`;
+        header.style.margin = '0 -52px 30px';
+        header.style.padding = '0 52px';
+        header.style.boxSizing = 'border-box';
+        header.style.background = '#f7f7f7';
+
+        const dateLabel = createElement('div', `${language}-worksheet-meta`, `${config.dateLabel}: ${date || '__________'}`);
+        dateLabel.style.fontSize = '17px';
+        dateLabel.style.fontWeight = '700';
+        const title = createElement('h1', `${language}-worksheet-title`, config.title);
+        title.style.margin = '0';
+        title.style.fontSize = '28px';
+        title.style.fontWeight = '800';
+        const locationLabel = createElement('div', `${language}-worksheet-meta`, `${config.locationLabel}: ${location || '__________'}`);
+        locationLabel.style.fontSize = '17px';
+        locationLabel.style.fontWeight = '700';
+        locationLabel.style.textAlign = 'right';
+
+        header.append(dateLabel, title, locationLabel);
+        worksheet.appendChild(header);
+
+        const grid = createElement('div', `${language}-worksheet-grid`);
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = `repeat(6, ${HANZI_BOX_SIZE_PX}px)`;
+        grid.style.gridAutoRows = `${HANZI_BOX_SIZE_PX}px`;
+        grid.style.gap = '16px 14px';
+        grid.style.alignContent = 'start';
+        grid.style.justifyContent = 'center';
+
+        characters.forEach((character) => {
+            if (/\s/u.test(character)) return;
+            grid.appendChild(createHanziPracticeBox(character));
+        });
+
+        worksheet.appendChild(grid);
+        return worksheet;
+    };
+
+    const downloadPracticeWorksheetPdf = async ({ characters, filename, language, date, location }) => {
+        ensurePdfDependencies();
+
+        const printableCharacters = Array.from(characters || '').filter((character) => !/\s/u.test(character));
+        if (printableCharacters.length === 0) {
+            throw new Error('No characters available to generate the worksheet PDF.');
+        }
+
+        const pages = chunkCharacters(printableCharacters, HANZI_BOXES_PER_PAGE);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+        for (let pageIndex = 0; pageIndex < pages.length; pageIndex += 1) {
+            const worksheet = createPracticeWorksheetPage({
+                characters: pages[pageIndex],
+                language,
+                date: date || new Date().toLocaleDateString('en-US'),
+                location,
+            });
+            await withHiddenPrintableElement(worksheet, async (element) => {
+                await waitForPdfLayout();
+                const canvas = await renderElementToCanvas(element);
+                const imgData = canvas.toDataURL('image/png');
+                if (pageIndex > 0) pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+            });
+        }
+
+        pdf.save(filename);
+    };
+
     window.AsianLanguagesPdf = {
         downloadElementAsPdf,
         downloadHanziWorksheetPdf,
+        downloadPracticeWorksheetPdf,
     };
 })(window);

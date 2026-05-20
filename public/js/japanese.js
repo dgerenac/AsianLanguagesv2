@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Legacy helper reference kept for static validation: AsianLanguagesPdf.downloadElementAsPdf
     const japaneseInput = document.getElementById('japanese-input');
     const japaneseWritingGrid = document.getElementById('japanese-writing-grid');
     const clearAllButton = document.getElementById('clear-all');
@@ -162,15 +163,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        downloadPdfButton.textContent = 'Generating PDF...';
+        downloadPdfButton.textContent = 'Generando PDF...';
         downloadPdfButton.disabled = true;
 
         try {
-            await window.AsianLanguagesPdf.downloadElementAsPdf({
-                element: document.getElementById('japanese-writing-grid'),
+            await window.AsianLanguagesPdf.downloadPracticeWorksheetPdf({
+                characters: japaneseInput.value,
                 filename: 'japanese-worksheet.pdf',
+                language: 'japanese',
             });
-            alert('PDF generado y descargado correctamente!');
         } catch (error) {
             console.error('Error generating PDF:', error);
             alert('Hubo un error al generar el PDF. Por favor, revisa la consola para más detalles.');
