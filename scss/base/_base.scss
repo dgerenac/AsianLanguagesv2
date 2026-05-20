@@ -56,3 +56,20 @@ body {
 main {
   flex: 1 0 auto;
 }
+
+
+.reviews-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.reviews-section .card-title {
+  font-size: 1.85rem;
+  font-weight: 600;
+}
+
+.reviews-section label,
+.reviews-section .btn,
+.reviews-section .text-muted {
+  font-size: 1.1rem;
+}

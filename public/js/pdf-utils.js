@@ -96,7 +96,7 @@
     };
 
 
-    const HANZI_BOX_SIZE_PX = 100;
+    const HANZI_BOX_SIZE_PX = 88;
     const HANZI_PAGE_WIDTH_PX = 794;
     const HANZI_PAGE_MIN_HEIGHT_PX = 1123;
     const HANZI_BOXES_PER_PAGE = 48;
@@ -152,7 +152,7 @@
         glyph.style.color = '#111111';
         glyph.style.opacity = '0.18';
         glyph.style.fontFamily = '"Noto Serif SC", "KaiTi", "STKaiti", "Noto Serif CJK SC", "Noto Sans CJK SC", "Microsoft YaHei", "SimSun", serif';
-        glyph.style.fontSize = '76px';
+        glyph.style.fontSize = '66px';
         glyph.style.fontWeight = '400';
         glyph.style.lineHeight = '1';
         glyph.style.transform = 'translateY(-2px)';
@@ -178,7 +178,7 @@
         header.style.display = 'grid';
         header.style.gridTemplateColumns = '1fr auto 1fr';
         header.style.alignItems = 'center';
-        header.style.borderBottom = '2px solid #ff2f55';
+        header.style.borderBottom = `2px solid ${config.lineColor || '#ff2f55'}`;
         header.style.margin = '0 -52px 30px';
         header.style.padding = '0 52px';
         header.style.boxSizing = 'border-box';
@@ -350,12 +350,14 @@
             title: '한글 쓰기 연습',
             dateLabel: 'Date',
             locationLabel: 'Location',
+            lineColor: '#0d6efd',
             fontFamily: '"Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif',
         },
         japanese: {
             title: '日本語書き取り練習',
             dateLabel: 'Date',
             locationLabel: 'Location',
+            lineColor: '#20c997',
             fontFamily: '"Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif',
         },
     };
@@ -379,7 +381,7 @@
         header.style.display = 'grid';
         header.style.gridTemplateColumns = '1fr auto 1fr';
         header.style.alignItems = 'center';
-        header.style.borderBottom = '2px solid #ff2f55';
+        header.style.borderBottom = `2px solid ${config.lineColor || '#ff2f55'}`;
         header.style.margin = '0 -52px 30px';
         header.style.padding = '0 52px';
         header.style.boxSizing = 'border-box';
